@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spdh-config sprt="1C">
+    <!--
+    spdh-config sprt = "1C" : separator char of each FID
+    SFID-config headsprt="1E" : separator char of each SFID
+    FID(SFID:):
+        tag: name of each FID
+        len: max len of each FID
+        lenFixed: if the len of the FID is fixed
+        align: data align, used for fixed length filed: RIGHT  LEFT
+        padding: padding data, used for fixed length filed. if have no this data, it will use default.(must 1 byte, "AA"(correct) "A"(uncorrect))
+                 ex:"00"->0x00,  "30"->'0'  "20"->' '  "FF"->0xFF
+        encrypt: encrypt flag. true - put this FID at last
+    -->
+
+
+    <FID align="LEFT" encrypt="false" len="20" lenFixed="false" padding="20" tag="A"></FID>
+    <FID align="RIGHT" encrypt="false" len="18" lenFixed="false" padding="30" tag="B"></FID>
+    <FID align="RIGHT" encrypt="false" len="18" lenFixed="false" padding="30" tag="C"></FID>
+    <FID align="LEFT" encrypt="false" len="1" lenFixed="true" padding="30" tag="D"></FID>
+    <FID align="LEFT" encrypt="false" len="19" lenFixed="false" padding="20" tag="E"></FID>
+    <FID align="LEFT" encrypt="false" len="8" lenFixed="true" padding="20" tag="F"></FID>
+    <FID align="LEFT" encrypt="false" len="8" lenFixed="true" padding="30" tag="G"></FID>
+    <FID align="LEFT" encrypt="false" len="48" lenFixed="false" padding="30" tag="H"></FID>
+    <FID align="LEFT" encrypt="false" len="48" lenFixed="false" padding="30" tag="I"></FID>
+    <FID align="RIGHT" encrypt="false" len="18" lenFixed="true" padding="30" tag="J"></FID>
+    <FID align="LEFT" encrypt="false" len="6" lenFixed="true" padding="30" tag="K"></FID>
+    <FID align="LEFT" encrypt="false" len="1" lenFixed="true" padding="30" tag="L"></FID>
+    <FID align="LEFT" encrypt="false" len="48" lenFixed="false" padding="30" tag="M"></FID>
+    <FID align="LEFT" encrypt="false" len="40" lenFixed="false" padding="20" tag="N"></FID>
+    <FID align="LEFT" encrypt="false" len="2" lenFixed="true" padding="30" tag="O"></FID>
+    <FID align="LEFT" encrypt="false" len="1" lenFixed="true" padding="30" tag="P"></FID>
+    <FID align="LEFT" encrypt="false" len="16" lenFixed="false" padding="20" tag="Q"></FID>
+    <FID align="LEFT" encrypt="false" len="1" lenFixed="true" padding="43" tag="R"></FID>
+    <FID align="LEFT" encrypt="false" len="10" lenFixed="false" padding="20" tag="S"></FID>
+    <FID align="LEFT" encrypt="false" len="10" lenFixed="false" padding="20" tag="T"></FID>
+    <FID align="LEFT" encrypt="false" len="1" lenFixed="true" padding="30" tag="U"></FID>
+    <FID align="LEFT" encrypt="false" len="15" lenFixed="true" padding="30" tag="V"></FID>
+    <FID align="LEFT" encrypt="false" len="449" lenFixed="false" padding="20" tag="W"></FID>
+    <FID align="LEFT" encrypt="false" len="3" lenFixed="true" padding="20" tag="X"></FID>
+    <FID align="LEFT" encrypt="false" len="9" lenFixed="true" padding="20" tag="Y"></FID>
+    <FID align="LEFT" encrypt="false" len="1" lenFixed="true" padding="30" tag="Z"></FID>
+
+    <FID align="LEFT" encrypt="false" len="250" lenFixed="false" padding="30" tag="a"></FID>
+    <FID align="LEFT" encrypt="false" len="16" lenFixed="false" padding="30" tag="b"></FID>
+    <FID align="LEFT" encrypt="false" len="16" lenFixed="false" padding="30" tag="c"></FID>
+    <FID align="LEFT" encrypt="false" len="12" lenFixed="false" padding="20" tag="d"></FID>
+    <FID align="LEFT" encrypt="false" len="2" lenFixed="true" padding="30" tag="e"></FID>
+    <FID align="LEFT" encrypt="false" len="200" lenFixed="false" padding="20" tag="f"></FID>
+    <FID align="LEFT" encrypt="false" len="48" lenFixed="false" padding="20" tag="g"></FID>
+    <FID align="LEFT" encrypt="false" len="10" lenFixed="true" padding="30" tag="h"></FID>
+    <FID align="LEFT" encrypt="false" len="9" lenFixed="true" padding="30" tag="i"></FID>
+    <FID align="LEFT" encrypt="false" len="2" lenFixed="true" padding="30" tag="j"></FID>
+    <FID align="LEFT" encrypt="false" len="25" lenFixed="false" padding="20" tag="k"></FID>
+    <FID align="LEFT" encrypt="false" len="75" lenFixed="true" padding="30" tag="l"></FID>
+    <FID align="LEFT" encrypt="false" len="75" lenFixed="true" padding="30" tag="m"></FID>
+    <FID align="LEFT" encrypt="false" len="121" lenFixed="true" padding="30" tag="n"></FID>
+    <FID align="LEFT" encrypt="false" len="75" lenFixed="true" padding="30" tag="o"></FID>
+    <FID align="LEFT" encrypt="false" len="40" lenFixed="false" padding="20" tag="q"></FID>
+    <FID align="LEFT" encrypt="false" len="40" lenFixed="false" padding="20" tag="r"></FID>
+    <FID align="LEFT" encrypt="false" len="24" lenFixed="false" padding="20" tag="s"></FID>
+    <FID align="LEFT" encrypt="false" len="16" lenFixed="true" padding="20" tag="t"></FID>
+    <FID align="LEFT" encrypt="false" len="6" lenFixed="true" padding="20" tag="u"></FID>
+
+    <FID align="LEFT" encrypt="false" len="118" lenFixed="false" padding="20" tag="0"></FID>
+    <FID align="LEFT" encrypt="false" len="24" lenFixed="true" padding="20" tag="1"></FID>
+    <FID align="LEFT" encrypt="false" len="82" lenFixed="false" padding="20" tag="2"></FID>
+    <FID align="LEFT" encrypt="false" len="82" lenFixed="false" padding="20" tag="3"></FID>
+    <FID align="LEFT" encrypt="false" len="171" lenFixed="false" padding="20" tag="4"></FID>
+
+    <FID align="LEFT" encrypt="false" len="999" lenFixed="false" padding="20" tag="6">
+        <SFID-config headsprt="1E" screened="01">
+            <SFID align="LEFT" len="12" lenFixed="true" padding="30" tag="A" />
+            <SFID align="LEFT" len="4" lenFixed="true" padding="20" tag="B" />
+            <SFID align="LEFT" len="4" lenFixed="true" padding="20" tag="C" />
+            <SFID align="LEFT" len="876" lenFixed="false" padding="20" tag="D" />
+            <SFID align="LEFT" len="3" lenFixed="true" padding="30" tag="E" />
+            <SFID align="LEFT" len="1" lenFixed="true" padding="30" tag="F" />
+            <SFID align="LEFT" len="1" lenFixed="true" padding="30" tag="G" />
+            <SFID align="LEFT" len="2" lenFixed="true" padding="20" tag="H" />
+            <SFID align="LEFT" len="3" lenFixed="true" padding="20" tag="I" />
+            <SFID align="LEFT" len="32" lenFixed="true" padding="30" tag="J" />
+            <SFID align="LEFT" len="32" lenFixed="true" padding="30" tag="K" />
+            <SFID align="LEFT" len="80" lenFixed="true" padding="30" tag="L" />
+            <SFID align="LEFT" len="4" lenFixed="true" padding="30" tag="N" />
+            <SFID align="LEFT" len="136" lenFixed="false" padding="20" tag="O" />
+            <SFID align="LEFT" len="64" lenFixed="false" padding="20" tag="P" />
+            <SFID align="LEFT" len="64" lenFixed="false" padding="20" tag="Q" />
+            <SFID align="LEFT" len="258" lenFixed="false" padding="20" tag="R" />
+            <SFID align="LEFT" len="63" lenFixed="true" padding="30" tag="S" />
+            <SFID align="LEFT" len="20" lenFixed="true" padding="30" tag="T" />
+            <SFID align="LEFT" len="16" lenFixed="true" padding="30" tag="U" />
+            <SFID align="LEFT" len="1" lenFixed="true" padding="30" tag="V" />
+            <SFID align="LEFT" len="1" lenFixed="true" padding="30" tag="W" />
+            <SFID align="LEFT" len="6" lenFixed="true" padding="30" tag="X" />
+            <SFID align="LEFT" len="202" lenFixed="false" padding="20" tag="Y" />
+            <SFID align="LEFT" len="1" lenFixed="true" padding="30" tag="Z" />
+
+            <SFID align="LEFT" len="39" lenFixed="true" padding="30" tag="b" />
+            <SFID align="LEFT" len="64" lenFixed="true" padding="30" tag="c" />
+            <SFID align="LEFT" len="115" lenFixed="true" padding="30" tag="d" />
+            <SFID align="LEFT" len="21" lenFixed="true" padding="30" tag="e" />
+            <SFID align="LEFT" len="1" lenFixed="true" padding="30" tag="f" />
+            <SFID align="LEFT" len="4" lenFixed="true" padding="30" tag="g" />
+            <SFID align="LEFT" len="6" lenFixed="true" padding="30" tag="h" />
+            <SFID align="LEFT" len="12" lenFixed="true" padding="30" tag="i" />
+            <SFID align="LEFT" len="4" lenFixed="true" padding="30" tag="j" />
+            <SFID align="LEFT" len="2" lenFixed="true" padding="30" tag="k" />
+            <SFID align="LEFT" len="120" lenFixed="false" padding="30" tag="l" />
+            <SFID align="LEFT" len="95" lenFixed="false" padding="30" tag="m" />
+            <SFID align="LEFT" len="1" lenFixed="true" padding="30" tag="n" />
+            <SFID align="LEFT" len="300" lenFixed="false" padding="30" tag="o" />
+            <SFID align="LEFT" len="162" lenFixed="false" padding="30" tag="q" />
+            <SFID align="LEFT" len="7" lenFixed="true" padding="30" tag="r" />
+            <SFID align="LEFT" len="8" lenFixed="true" padding="30" tag="s" />
+            <SFID align="LEFT" len="11" lenFixed="false" padding="30" tag="t" />
+            <SFID align="LEFT" len="5" lenFixed="true" padding="30" tag="u" />
+            <SFID align="LEFT" len="57" lenFixed="false" padding="30" tag="v" />
+            <SFID align="LEFT" len="119" lenFixed="false" padding="30" tag="w" />
+        </SFID-config>
+    </FID>
+
+    <FID align="LEFT" encrypt="false" len="999" lenFixed="false" padding="20" tag="7">
+        <SFID-config headsprt="1E" screened="01">
+            <SFID align="LEFT" len="40" lenFixed="false" padding="30" tag="a" />
+            <SFID align="LEFT" len="15" lenFixed="true" padding="30" tag="b" />
+            <SFID align="LEFT" len="65" lenFixed="false" padding="30" tag="c" />
+        </SFID-config>
+    </FID>
+
+    <FID align="LEFT" encrypt="false" len="999" lenFixed="false" padding="20" tag="8">
+        <SFID-config headsprt="1E" screened="01">
+            <SFID align="LEFT" len="24" lenFixed="true" padding="30" tag="A" />
+            <SFID align="LEFT" len="18" lenFixed="true" padding="20" tag="B" />
+        </SFID-config>
+    </FID>
+
+    <FID align="LEFT" encrypt="false" len="999" lenFixed="false" padding="20" tag="9">
+        <SFID-config headsprt="1E" screened="01">
+            <SFID align="LEFT" len="18" lenFixed="true" padding="20" tag="a" />
+            <SFID align="LEFT" len="512" lenFixed="false" padding="20" tag="b" />
+            <SFID align="LEFT" len="512" lenFixed="false" padding="20" tag="x" />
+            <SFID align="LEFT" len="512" lenFixed="false" padding="20" tag="y" />
+        </SFID-config>
+    </FID>
+
+</spdh-config>

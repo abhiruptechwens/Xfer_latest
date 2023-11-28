@@ -1,0 +1,148 @@
+<resources>
+    <string name="app_name">Payment</string>
+    <string name="accept_agreement">Accept authorization</string>
+    <string name="i_agree">I AGREE</string>
+    <string name="order_amount">Order amount</string>
+    <string name="please_confirm_entering_the_total_amount">Please confirm you are entering the total\namount to be charged from your point of sale system.</string>
+    <string name="contactless">Contactless</string>
+    <string name="send_payment_via_qr">Send Payment via QR</string>
+    <string name="send_payment_via_sms">Send Payment via SMS</string>
+    <string name="switch_txt">Switch</string>
+    <string name="scan_another_card">Scan another card</string>
+    <string name="enter_card_details">Enter Card Details</string>
+    <string name="pay">Pay %1$s</string>
+    <string name="load">Load %1$s</string>
+    <string name="billing_zip_code">Billing zip code</string>
+    <string name="security_code">Security code</string>
+    <string name="amount_details">Amount details</string>
+    <string name="order_amount_colon">Order amount:</string>
+    <string name="tip_amount_colon">Tip amount:</string>
+    <string name="compliance_fee_colon">Compliance fee:</string>
+    <string name="card_holder_name">Card Holder Name</string>
+    <string name="card_number">Card number</string>
+    <string name="expiration">Expiration</string>
+    <string name="insert_chip_tap_or_swipe_card">Insert chip, tap or swipe card</string>
+    <string name="enter_manually">Enter Manually</string>
+    <string name="next">Next</string>
+    <string name="failed">Failed</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <!-- customer registration -->
+    <string name="register">Register</string>
+    <string name="register_new_customer">New customer registration</string>
+    <string name="firstname">First name</string>
+    <string name="lastname">Last name</string>
+    <string name="middlename">Middle name</string>
+    <string name="enter_phone_number">Enter phone number</string>
+    <string name="id_number">ID number</string>
+    <string name="id_type">Document</string>
+    <string name="issue_date">Issue date</string>
+    <string name="expiry_date">Expiry date</string>
+    <string name="birthdate">Birth date</string>
+    <string name="gender">Gender</string>
+    <string name="address">Address</string>
+    <string name="city">City</string>
+    <string name="state">State/Province</string>
+    <string name="country">Country</string>
+    <string name="postal_code">Postal code</string>
+
+    <string name="sign_here">Sign here</string>
+    <string name="clear">Clear</string>
+    <string name="terminal_login">Terminal Login</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="reset_password">Reset password</string>
+    <string name="new_password">New password</string>
+    <string name="confirm_new_password">Confirm new password</string>
+    <string name="change_password">Change password</string>
+    <string name="set_new_pin">Set new PIN</string>
+    <string name="confirm_new_pin">Confirm new PIN</string>
+    <string name="total_amount_colon">Total Amount:</string>
+    <string name="order_id_colon">Order ID:</string>
+    <string name="order_date_colon">Order date:</string>
+    <string name="done">Done</string>
+    <string name="scan_again">Scan again</string>
+    <string name="welcome_associate">Welcome Associate</string>
+    <string name="scan_driver_s_license">Scan driver\'s license</string>
+    <string name="scan_back_driver_s_license">Scan the back of the customer\'s driver\'s license</string>
+    <string name="authenticate_using_phone_or_id">Authenticate Using ID</string>
+    <string name="camera_permission_is_required">Camera permission is required</string>
+    <string name="enter_tip_amount">Enter tip amount</string>
+    <string name="or">or</string>
+    <string name="enter_custom_tip_amount">Enter custom tip amount</string>
+    <string name="sign">Sign</string>
+    <string name="scan_now">Scan now</string>
+    <string name="version_code">Version %1$s code %2$d</string>
+    <string name="support_phone_number">Xfer Support: (833) 206–5989</string>
+    <string name="support">Support</string>
+    <string name="close">Close</string>
+    <string name="support_information">Support information</string>
+    <string name="support_user_id_info">User: %1$s, ID: %2$s</string>
+    <string name="support_store_id_info">Store: %1$s, ID: %2$s</string>
+    <string name="select_phone_country">Select phone country</string>
+    <string name="customer_name">Customer name :</string>
+
+    <!-- recent transactions -->
+    <string name="search">Search</string>
+    <string name="recent_transactions">Recent Transactions</string>
+    <string name="amount">Amount</string>
+    <string name="status">Status</string>
+    <string name="associate">Associate Name</string>
+    <string name="card_last_digits">Last 4</string>
+    <string name="payment_status">Payment status</string>
+    <string name="transaction_status_paid">Paid</string>
+    <string name="transaction_status_expired">Expired</string>
+    <string name="transaction_status_pending">Pending</string>
+    <string name="recent_transactions_filter_associate_only">Created by me</string>
+    <string name="recent_transactions_empty">Transactions not found</string>
+
+    <!-- autolock dialog -->
+    <string name="autolock_title">Are you there?</string>
+    <string name="autolock_in">Autolock in:</string>
+    <string name="time_number_sec">%1$d sec</string>
+    <string name="autolock_prevent_instruction">TAP anywhere to continue</string>
+
+    <!-- scan active dialog -->
+    <string name="point_the_optical_sensor_at_barcode">Point the optical sensor directly at the barcode while ensuring it\'s well-lit.</string>
+    <string name="scan_document">Scan document</string>
+
+    <!-- validation errors -->
+    <string name="validation_phone_blank">Phone cannot be blank</string>
+    <string name="validation_phone_10_symbols">Phone number must be exact 10 symbols</string>
+    <string name="validation_phone_at_least_6_symbols">Phone number must be at least 6 symbols</string>
+    <string name="validation_customer_name_blank">Customer name cannot be blank</string>
+    <string name="validation_amount_greater_than_1_0">Amount must be greater than 1.0</string>
+    <string name="validation_password_at_least_8_symbols">Password needs to be at least 8 symbols</string>
+    <string name="validation_passwords_are_matching">Passwords are not matching</string>
+
+    <!-- errors -->
+    <string name="error_unknown">Unknown error</string>
+    <string name="error_no_internet_connection">No internet connection</string>
+    <string name="error_request">Request error</string>
+    <string name="validation_error">Validation error</string>
+    <string name="error_server_contact_support">Server error. Please contact support</string>
+    <string name="error_signature_is_not_set">Signature is not set</string>
+    <string name="error_unable_to_send_signature">Unable to send signature</string>
+    <string name="error_pin_does_not_match">PIN does not match</string>
+    <string name="error_scanning">Scanning error</string>
+    <string name="error_transaction_failed">Transaction failed</string>
+    <string name="error_incorrect_barcode">Incorrect barcode</string>
+    <string name="error_scanner_with_code">Scanner error: %1$d</string>
+    <string name="error_compliance_fee_with_message">Unable to get compliance fee: %1$s</string>
+    <string name="error_wrong_card_number">Wrong card number</string>
+    <string name="document_id">Document Id :</string>
+    <string name="phone_no">Phone Number</string>
+    <string name="state_name">State :</string>
+    <string name="title_activity_wallet_screen">WalletScreen</string>
+    <string name="driver_s_license_passport">Driver\'s License</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="your_information">Your Information</string>
+    <string name="store">"Store: "</string>
+    <string name="scan_card">Scan Card</string>
+    <string name="xfer">Xfer</string>
+    <string name="enter_full_name">Enter Full Name</string>
+    <string name="xfer_powered_by_west_town_bank_trust"><![CDATA[Xfer powered by West Town Bank & Trust]]></string>
+    <string name="account_number">Account Number</string>
+    <string name="search_by_name">Search by Name</string>
+
+</resources>

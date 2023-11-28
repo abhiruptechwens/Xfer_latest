@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <application
+        android:name=".app.TerminalApplication"
+        android:allowBackup="false"
+        android:hapticFeedbackEnabled="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/xfer"
+        android:roundIcon="@mipmap/ic_launcher"
+        android:screenOrientation="landscape"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.LedgergreenTerminal"
+        tools:targetApi="31">
+        <activity
+            android:name=".ui.WalletScreen"
+            android:exported="false"
+            android:label="@string/title_activity_wallet_screen"
+            android:theme="@style/Theme.LedgergreenTerminal" />
+        <activity
+            android:name=".ui.wallet.WalletScreen"
+            android:exported="false"
+            android:label="@string/title_activity_wallet_screen"
+            android:theme="@style/Theme.LedgergreenTerminal" />
+        <activity
+            android:name=".ui.wallet.WalletActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.LedgergreenTerminal"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

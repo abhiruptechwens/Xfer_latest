@@ -1,0 +1,85 @@
+package com.ledgergreen.terminal.data.network.exception
+
+object FailedTransaction {
+
+    fun isBusinessError(message: String): Boolean = businessReasons.contains(message)
+
+    /* List can be updated from Datadog logs
+    * https://us5.datadoghq.com/rum/sessions?query=%40type%3Aaction%20failed_transaction&agg_q=%40context.failure_reason&cols=&sort_m=&sort_t=&top_n=100&top_o=top&viz=query_table&x_missing=true
+    * use last 2 weeks filter to see fresh logs.
+    *
+    * Not all errors from link should be counted as business errors, be careful when editing this
+    * list.
+    * */
+    private val businessReasons = listOf(
+        "Insuff Funds",
+        "CVV2 Mismatch",
+        "01 Update info",
+        "Off PIN auth int",
+        "Suspected Fraud",
+        "Decline",
+        "Invalid Zip",
+        "Format Error",
+        "Invalid Cardholder First Name",
+        "Processor Declined",
+        "02 Try later",
+        "Insufficient Funds",
+        "Blkd, new card",
+        "Invalid CVV2 Value",
+        "Card Issuer Declined CVV",
+        "Incorrect billing zip code",
+        "Processor Declined - Fraud Suspected",
+        "Unknown error",
+        "payment.number must be a valid credit card number",
+        "Declined - Call Issuer",
+        "Invalid Trans",
+        "Exc App Amt Lmt",
+        "No Reply",
+        "Serv Not Allowed",
+        "Expired Card",
+        "cvv",
+        "Invalid Transaction Data",
+        "Closed Account",
+        "Do Not Honor",
+        "Merch Id Error",
+        "Error 18",
+        "Invalid expiry month",
+        "Security Violation",
+        "Invalid expiry month or year",
+        "SUSPECTED FRAUD",
+        "Transaction Not Allowed",
+        "Cannot Authorize at this time (Policy)",
+        "03 Do not retry",
+        "Restricted Card",
+        "Exc W/D Freq Lmt",
+        "Card No. Error",
+        "DECLINED: NSF",
+        "Sec Violation",
+        "Card Not Activated",
+        "RE Enter",
+        "Card Type Not Accepted",
+        "DECLINED CVV2",
+        "Gateway Rejected: duplicate",
+        "INVALID CAM\\CVV",
+        "Declined",
+        "Limit Exceeded",
+        "Amount Error",
+        "Missing Card Holder Account Data",
+        "System Error",
+        "Credit Card Number Invalid",
+        "SERV NOT ALLOWED",
+        "Stolen Card",
+        "Amount should be less than 1000 including compliance fee.",
+        "Call Issuer. Pick Up Card.",
+        "Issuer or Cardholder has put a restriction on the card",
+        "CALL AUTH CENTER",
+        "DECLINED 82",
+        "DECLINED:BLOCKED",
+        "Expiration month is invalid.",
+        "Invalid Transaction",
+        "Invalid expiry year",
+        "PLEASE RETRY5270",
+        "Stop Recurring",
+        "Unable to send signature",
+    )
+}
