@@ -36,7 +36,7 @@ modifier: Modifier = Modifier,
     Dialog(
         onDismissRequest = onClose,
     ) {
-        Surface(modifier, shape = RoundedCornerShape(15.dp)) {
+        Surface(modifier, shape = RoundedCornerShape(10.dp)) {
 
             Column(modifier = Modifier.padding(16.dp)) {
 

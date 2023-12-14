@@ -12,9 +12,9 @@ sealed class Document {
     abstract val firstName: String
     abstract val lastName: String
     abstract val expiryDate: LocalDate
-    abstract val birthDate: LocalDate
+    abstract val birthDate: LocalDate?
     abstract val country: String
-    abstract val sex: String
+    abstract val sex: String?
 
     data class DriverLicense(
         override val documentNumber: String,
@@ -22,8 +22,8 @@ sealed class Document {
         val middleName: String,
         override val lastName: String,
         override val expiryDate: LocalDate,
-        override val birthDate: LocalDate,
-        override val sex: String,
+        override val birthDate: LocalDate?,
+        override val sex: String?,
         override val country: String,
         val state: String,
         val city: String,

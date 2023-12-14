@@ -5,7 +5,7 @@ package com.ledgergreen.terminal.ui.home
 import android.Manifest
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -22,13 +22,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonColors
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.ButtonElevation
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Icon
-import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -42,34 +36,30 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.PaintingStyle.Companion.Stroke
 import androidx.compose.ui.graphics.PathEffect
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.graphics.toColorInt
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.ledgergreen.terminal.R
-import com.ledgergreen.terminal.app.AppState1
 import com.ledgergreen.terminal.data.model.UserInfo
 import com.ledgergreen.terminal.data.model.phone.CountryCodes
 import com.ledgergreen.terminal.data.model.phone.PhoneNumber
@@ -79,25 +69,21 @@ import com.ledgergreen.terminal.monitoring.Clicks
 import com.ledgergreen.terminal.monitoring.trackClick
 import com.ledgergreen.terminal.ui.common.BackPressSealed
 import com.ledgergreen.terminal.ui.common.ErrorDialog
-import com.ledgergreen.terminal.ui.common.LedgerGreenIcons
 import com.ledgergreen.terminal.ui.common.NexgoN6Preview
-import com.ledgergreen.terminal.ui.common.ledgergreenicons.IcScanButton
 import com.ledgergreen.terminal.ui.common.toVisibility
 import com.ledgergreen.terminal.ui.common.topbar.DefaultAppBarConfig
 import com.ledgergreen.terminal.ui.common.topbar.SwitchAppBar
 import com.ledgergreen.terminal.ui.common.topbar.defaultAppBarConfig
 import com.ledgergreen.terminal.ui.home.dialogs.CustomerConfirmationDialog
-import com.ledgergreen.terminal.ui.home.dialogs.DocScanActiveDialog
 import com.ledgergreen.terminal.ui.theme.LedgerGreenTheme
 import kotlinx.coroutines.delay
 import kotlinx.datetime.LocalDate
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun HomeScreen(
     navigateToAmount: () -> Unit,
-    navigateToWallet: (customerId : String?) -> Unit,
+    navigateToWallet: (customerId: String?) -> Unit,
     navigateToContactless: () -> Unit,
     navigateToRecentTransactions: () -> Unit,
     navigateToRegisterCustomer: () -> Unit,
@@ -146,6 +132,7 @@ fun HomeScreen(
         modifier = modifier,
         isGrantedCameraPermission = permissionState.status.isGranted,
         onScanCancel = viewModel::onScanCancel,
+        onClose = viewModel::onCloseDialog,
     )
 }
 
@@ -170,14 +157,20 @@ private fun BackPress() {
     BackHandler(backPressState == BackPressSealed.Idle) {
         backPressState = BackPressSealed.InitialTouch
         showToast = true
-        if(backPressState == BackPressSealed.Idle)
+        if (backPressState == BackPressSealed.Idle)
             System.exit(0)
     }
+}
+@Composable
+fun ShowToast(text:String, onDone:()->Unit){
+    Toast.makeText(LocalContext.current, text, Toast.LENGTH_LONG).show()
+    onDone()
 }
 
 @Composable
 fun HomeScreen(
     state: HomeState,
+    onClose: () ->Unit,
     onDocScan: () -> Unit,
     onConfirmCustomer: () -> Unit,
     onContactless: () -> Unit,
@@ -188,10 +181,6 @@ fun HomeScreen(
     isGrantedCameraPermission: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    state.errorMessage?.let {
-        ErrorDialog(it, state.onErrorShown)
-    }
-
     BackPress()
 
 //    if (state.scannerStarted && state.showScannerHint) {
@@ -199,112 +188,146 @@ fun HomeScreen(
 //    }
 
     state.customerResponse?.let {
-        it.state?.let { it1 ->
-            it.phone?.let { it2 ->
-                CustomerConfirmationDialog(
+        it.phone?.let { it2 ->
+            CustomerConfirmationDialog(
 
-                    document = it.customerIdNumber,
-                    state = it1,
-                    phoneNo = it2,
-                    name = it.fullName,
-                    onConfirmCustomer = onConfirmCustomer,
-                    onReject = onRejectScan,
-                    onScanAgain = onDocScan,
-                )
-            }
+                onClose = onClose,
+                document = it.customerIdNumber,
+                state = state.customerResponse.state,
+                phoneNo = it2,
+                name = it.fullName,
+                onConfirmCustomer = onConfirmCustomer,
+                onReject = onRejectScan,
+                onScanAgain = onDocScan,
+            )
         }
     }
 
     Scaffold(
         modifier = modifier,
-        backgroundColor = Color(0xFF06478D),
-        topBar = { SwitchAppBar(appBarConfig,{})},
+        backgroundColor = Color.White,
+        topBar = { SwitchAppBar(appBarConfig, {}, appBarConfig.onLogout) },
     ) { paddingValues ->
 
 
-        Column {
-//            Text(
-//
-//                color = Color(0xFFFFFFFF),
-//                modifier = Modifier
-//                    .padding(start = 16.dp),
-//                text = stringResource(R.string.store) + "\n"+ state.userInfo.store,
-//                style = MaterialTheme.typography.caption,
-//            )
+        state.errorMessage?.let {
+            if (state.errorMessage.contains("Scan Error")) {
+                ShowToast(text = state.errorMessage,state.onErrorShown)
 
+            }
+//                ErrorDialog(it, state.onErrorShown)
+            else if (state.errorMessage.contains("Scanner error")) {
+                ShowToast(text = state.errorMessage,state.onErrorShown)
 
-            Column(
-                Modifier
-                    .fillMaxSize()
-                    .padding(top = 15.dp, start = 15.dp, end = 15.dp)
-                    .padding(paddingValues),
-                verticalArrangement = Arrangement.Center,
-            ) {
+            }
+            else if (state.isDialogShown)
+                ErrorDialog(it, state.onErrorShown)
+        }
 
+//        if (state.scanError!=null && state.scanError.contains("Scan Error")){
+//            ToastMessage(message = AppState1.dlError)
+//            AppState1.dlError = ""
+//        }
 
-                Spacer(modifier = Modifier.weight(1f))
-                if (isGrantedCameraPermission) {
-//                Column(
-//                    Modifier.fillMaxWidth(),
-//                    horizontalAlignment = Alignment.CenterHorizontally,
-//                ) {
-//                    Text(
-//                        color = Color(0xFFFFFFFF),
-//                        text = stringResource(R.string.welcome_associate),
-//                        style = MaterialTheme.typography.h5,
+        Box {
+
+            Image(painter = painterResource(id = R.drawable.botton_lines),
+                contentDescription = null,
+                modifier = Modifier.align(Alignment.BottomStart))
+
+            Column {
+
+                Column(
+                    Modifier
+                        .fillMaxSize()
+                        .padding(start = 15.dp, end = 15.dp)
+                        .padding(paddingValues),
+                    verticalArrangement = Arrangement.Center,
+                ) {
+
+                    if (isGrantedCameraPermission) {
+//                    Row(
+//                        Modifier
+//                            .fillMaxWidth()
+//                            .align(Alignment.Start),
+////                    horizontalAlignment = Alignment.Start,
+//                    ) {
+//                        Text(
+//                            color = Color(0xFFFFFFFF),
+//                            text = "Associate:",
+//                            fontSize = 12.sp,
+//                        )
+//                        Text(
+//                            color = Color(0xFFFFFFFF),
+//                            modifier = Modifier.padding(start = 8.dp),
+//                            text = state.userInfo.username,
+//                            fontSize = 12.sp,
+//                        )
+//                    }
+//                    Divider(
+//                        modifier = Modifier
+//                            .padding(top = 2.dp)
+//                            .background(Color.White),
+//                        thickness = 2.dp,
 //                    )
-//                    Text(
-//                        color = Color(0xFFFFFFFF),
-//                        modifier = Modifier.padding(top = 8.dp),
-//                        text = state.userInfo.username,
-//                        style = MaterialTheme.typography.h5,
-//                    )
-//                }
 
-                    val stroke = Stroke(width = 2f,
-                        pathEffect = PathEffect.dashPathEffect(floatArrayOf(15f, 15f), 0f)
-                    )
+//                    Spacer(Modifier.height(25.dp))
+                        Spacer(Modifier.weight(1f))
 
-                    Column(
-                        modifier = Modifier
-                            .drawBehind {
-                                drawRoundRect(
-                                    color = Color.Gray,
-                                    style = stroke,
-                                    cornerRadius = CornerRadius(15.dp.toPx())
-                                )
-                            }
+                        val stroke = Stroke(
+                            width = 2f,
+                            pathEffect = PathEffect.dashPathEffect(floatArrayOf(15f, 15f), 0f),
+                        )
+
+                        Column(
+                            modifier = Modifier
+                                .drawBehind {
+                                    drawRoundRect(
+                                        color = Color.Gray,
+                                        style = stroke,
+                                        cornerRadius = CornerRadius(5.dp.toPx()),
+                                    )
+                                }
 //                            .border(
 //                                BorderStroke(0.3.dp, color = Color.White),
 //                                shape = RoundedCornerShape(15.dp),
 //
 //                                )
-                            .padding(
-                                10.dp,
-                            ),
-                    ) {
-                        Spacer(Modifier.height(5.dp))
+                                .padding(
+                                    10.dp,
+                                ),
+                        ) {
+                            Spacer(Modifier.height(5.dp))
 
 //                    Text(
 //                        color = Color(0xFFFFFFFF),
 //                        text = stringResource(R.string.scan_driver_s_license),
 //                        style = MaterialTheme.typography.subtitle1,
 //                    )
-                        Text(
+                            Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.authentic_icon),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(20.dp).align(Alignment.CenterVertically),
+                                )
 
-                            color = Color(0xFFFFFFFF),
-                            modifier = Modifier
-                                .padding(vertical = 5.dp)
-                                .align(Alignment.CenterHorizontally),
-                            text = stringResource(R.string.authenticate_using_phone_or_id),
-                            style = MaterialTheme.typography.caption,
-                        )
-                        DocScanButton(
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            enabled = !state.loading,
-                            onScan = onDocScan,
-                        )
+                                Text(
+
+                                    color = Color.Black,
+                                    modifier = Modifier
+                                        .padding(horizontal = 5.dp),
+                                    text = stringResource(R.string.authenticate_using_phone_or_id),
+                                    fontSize = 18.sp,
+                                )
+                            }
+
+
+                            DocScanButton(
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                enabled = !state.loading,
+                                onScan = onDocScan,
+                            )
 
 //                    Text(
 //                        modifier = Modifier
@@ -326,68 +349,35 @@ fun HomeScreen(
 //                        onClick = onContactless,
 //                    )
 
-                    }
+                        }
 
-                    RemotePayButton(
-                        modifier = Modifier
-                            .padding(top = 16.dp)
-                            .fillMaxWidth(),
-                        enabled = !state.loading,
-                        onClick = onContactless,
-                    )
-
-                    RecentTransactionsButton(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 16.dp)
-                            .height(60.dp),
-                        enabled = !state.loading,
-                        onClick = onRecentTransactions,
-                    )
-
-                    Box(
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(top = 16.dp)
-                            .alpha(state.loading.toVisibility()),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        CircularProgressIndicator()
-                    }
-
-
-                    Spacer(modifier = Modifier.weight(1f))
-
-                    Text(
-                        modifier = Modifier
-                            .align(Alignment.CenterHorizontally)
-                            .padding(bottom = 10.dp),
-                        text = stringResource(id = R.string.xfer_powered_by_west_town_bank_trust),
-                        style = TextStyle(
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight(400),
-                            color = Color(0xFFFFFFFF),
-
-                            textAlign = TextAlign.Center,
-                            textDecoration = TextDecoration.Underline,
-                        ),
-                    )
-
-                } else {
-                    Column(
-                        Modifier
-                            .fillMaxSize()
-                            .padding(paddingValues),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Spacer(modifier = Modifier.weight(1f))
-                        Text(
-                            color = Color(0xFFFFFFFF),
-                            modifier = Modifier.align(Alignment.CenterHorizontally),
-                            text = stringResource(R.string.camera_permission_is_required),
-                            textAlign = TextAlign.Center,
+                        RemotePayButton(
+                            modifier = Modifier
+                                .padding(top = 16.dp)
+                                .fillMaxWidth(),
+                            enabled = !state.loading,
+                            onClick = onContactless,
                         )
+
+                        RecentTransactionsButton(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 16.dp)
+                                .height(60.dp),
+                            enabled = !state.loading,
+                            onClick = onRecentTransactions,
+                        )
+
+                        Box(
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(top = 16.dp)
+                                .alpha(state.loading.toVisibility()),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            CircularProgressIndicator()
+                        }
+
 
                         Spacer(modifier = Modifier.weight(1f))
 
@@ -395,7 +385,7 @@ fun HomeScreen(
                             modifier = Modifier
                                 .align(Alignment.CenterHorizontally)
                                 .padding(bottom = 10.dp),
-                            text = "Terms & conditions & Privacy policy",
+                            text = stringResource(id = R.string.xfer_powered_by_west_town_bank_trust),
                             style = TextStyle(
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight(400),
@@ -403,8 +393,42 @@ fun HomeScreen(
 
                                 textAlign = TextAlign.Center,
                                 textDecoration = TextDecoration.Underline,
-                            )
+                            ),
                         )
+
+                    } else {
+                        Column(
+                            Modifier
+                                .fillMaxSize()
+                                .padding(paddingValues),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                        ) {
+                            Spacer(modifier = Modifier.weight(1f))
+                            Text(
+                                color = Color(0xFFFFFFFF),
+                                modifier = Modifier.align(Alignment.CenterHorizontally),
+                                text = stringResource(R.string.camera_permission_is_required),
+                                textAlign = TextAlign.Center,
+                            )
+
+                            Spacer(modifier = Modifier.weight(1f))
+
+                            Text(
+                                modifier = Modifier
+                                    .align(Alignment.CenterHorizontally)
+                                    .padding(bottom = 10.dp),
+                                text = "Terms & conditions & Privacy policy",
+                                style = TextStyle(
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight(400),
+                                    color = Color(0xFFFFFFFF),
+
+                                    textAlign = TextAlign.Center,
+                                    textDecoration = TextDecoration.Underline,
+                                ),
+                            )
+                        }
                     }
                 }
             }
@@ -425,13 +449,14 @@ fun RecentTransactionsButton(
         modifier = Modifier
             .padding(start = 8.dp, end = 14.dp, top = 38.dp)
             .border(
-                width = 3.dp,
-                color = Color.White,
-                shape = RoundedCornerShape(size = 20.dp),
+                width = 1.dp,
+                color = Color(0xFF6DA9FF),
+                shape = RoundedCornerShape(size = 5.dp),
             )
             .width(333.dp)
             .height(60.dp)
-            .background(color = Color(0xE2FFFFFF), shape = RoundedCornerShape(size = 20.dp))
+            .shadow(8.dp, RoundedCornerShape(5.dp))
+            .background(color = Color(0xFF0043A5), shape = RoundedCornerShape(size = 5.dp))
             .padding(start = 10.dp, top = 6.dp, end = 10.dp, bottom = 6.dp)
             .clickable {
 //                Toast
@@ -450,7 +475,7 @@ fun RecentTransactionsButton(
                 fontSize = 14.sp,
                 lineHeight = 22.sp,
                 fontWeight = FontWeight(600),
-                color = Color(0xE2083364 ),
+                color = Color.White,
                 textAlign = TextAlign.Center,
             ),
         )
@@ -482,15 +507,16 @@ fun DocScanButton(
 
     Row(
         modifier = Modifier
-            .padding(start = 8.dp, end = 14.dp, top = 15.dp)
+            .padding( top = 15.dp)
             .border(
-                width = 3.dp,
-                color = Color.White,
-                shape = RoundedCornerShape(size = 10.dp),
+                width = 1.dp,
+                color = Color(0xFF6DA9FF),
+                shape = RoundedCornerShape(size = 5.dp),
             )
             .width(333.dp)
             .height(60.dp)
-            .background(color = Color(0xE2FFFFFF), shape = RoundedCornerShape(size = 10.dp))
+            .shadow(8.dp, RoundedCornerShape(5.dp))
+            .background(color = Color(0xFF0043A5), shape = RoundedCornerShape(size = 5.dp))
             .padding(start = 10.dp, top = 6.dp, end = 10.dp, bottom = 6.dp)
             .clickable { onScan() },
     ) {
@@ -503,39 +529,12 @@ fun DocScanButton(
                 fontSize = 14.sp,
                 lineHeight = 22.sp,
                 fontWeight = FontWeight(600),
-                color = Color(0xE2083364),
+                color = Color.White,
                 textAlign = TextAlign.Center,
             ),
         )
 
     }
-//    Button(
-//        colors = ButtonDefaults.buttonColors(Color(0xFF61BAF5)),
-//        modifier = modifier,
-//        shape = RoundedCornerShape(5.dp),
-//        enabled = enabled,
-//        content = {
-//            Row(
-//                verticalAlignment = Alignment.CenterVertically,
-//            ) {
-//                Icon(
-//                    modifier = Modifier.size(24.dp),
-//                    imageVector = LedgerGreenIcons.IcScanButton,
-//                    tint = Color(0xFFFFFFFF),
-//                    contentDescription = null,
-//                )
-//                Spacer(Modifier.width(16.dp))
-//                Text(
-//                    stringResource(id = R.string.scan_now),
-//                    color = Color(0xFFFFFFFF),
-//                    style = LocalTextStyle.current.copy(
-//                        fontSize = 24.sp,
-//                    ),
-//                )
-//            }
-//        },
-//        onClick = onScan,
-//    )
 }
 
 @Composable
@@ -550,13 +549,14 @@ fun RemotePayButton(
         modifier = Modifier
             .padding(start = 8.dp, end = 14.dp, top = 38.dp)
             .border(
-                width = 3.dp,
-                color = Color.White,
-                shape = RoundedCornerShape(size = 20.dp),
+                width = 1.dp,
+                color = Color(0xFF6DA9FF),
+                shape = RoundedCornerShape(size = 5.dp),
             )
+            .shadow(8.dp, RoundedCornerShape(5.dp))
             .width(333.dp)
             .height(60.dp)
-            .background(color = Color(0xE2FFFFFF), shape = RoundedCornerShape(size = 20.dp))
+            .background(color = Color(0xFF0043A5), shape = RoundedCornerShape(size = 5.dp))
             .padding(start = 10.dp, top = 6.dp, end = 10.dp, bottom = 6.dp)
             .clickable { onClick() },
     ) {
@@ -573,27 +573,12 @@ fun RemotePayButton(
                 fontSize = 14.sp,
                 lineHeight = 22.sp,
                 fontWeight = FontWeight(600),
-                color = Color(0xE2083364 ),
+                color = Color.White,
                 textAlign = TextAlign.Center,
             ),
         )
 
     }
-//    Button(
-//        colors = ButtonDefaults.buttonColors(Color(0xFF61BAF5)),
-//        modifier = modifier,
-//        enabled = enabled,
-//        onClick = onClick,
-//        content = {
-//            Text(
-//                stringResource(id = R.string.contactless),
-//                color = Color(0xFFFFFFFF),
-//                style = LocalTextStyle.current.copy(
-//                    fontSize = 24.sp,
-//                ),
-//            )
-//        },
-//    )
 }
 
 @Composable
@@ -649,6 +634,7 @@ fun PhoneNumberRegister(
 //    )
 }
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun rememberCameraPermissionState(
     onPermissionResult: (Boolean) -> Unit = {},
@@ -682,6 +668,7 @@ fun HomeScreenPreview(isGrantedCamera: Boolean) {
                 onErrorShown = { },
                 navigateNext = false,
                 isDialogShown = false,
+                scanError = null,
             ),
             onDocScan = { },
             onConfirmCustomer = { },
@@ -691,6 +678,7 @@ fun HomeScreenPreview(isGrantedCamera: Boolean) {
             appBarConfig = DefaultAppBarConfig.preview,
             isGrantedCameraPermission = isGrantedCamera,
             onScanCancel = {},
+            onClose = {},
         )
     }
 }
@@ -712,8 +700,10 @@ val fakeRegistrationForm = CustomerRegistrationForm(
     postalCode = "27870-3154",
     phoneNumber = PhoneNumber("12345678", CountryCodes.defaultUSPhoneCode),
 )
+
+@Preview
 @Composable
-fun ToastMessage(message: String, duration: Int = Toast.LENGTH_SHORT) {
+fun ToastMessage(message: String, duration: Int = Toast.LENGTH_LONG) {
     val context = LocalContext.current
     val density = LocalDensity.current.density
     val view = LocalView.current
@@ -727,26 +717,26 @@ fun ToastMessage(message: String, duration: Int = Toast.LENGTH_SHORT) {
         isVisible = false
     }
 
-    if (isVisible) {
+    if (true) {
         // Draw a Box with the message at the bottom of the screen
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp)
-                .offset(y = (50 * density).dp)
+                .offset(y = (50 * density).dp),
         ) {
             Row(
                 modifier = Modifier
                     .background(Color.Black)
                     .padding(16.dp)
                     .shadow(4.dp, shape = MaterialTheme.shapes.small),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 // Display the message
                 Text(
                     text = message,
                     color = Color.White,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 )
                 // You can add an icon or close button if needed
             }

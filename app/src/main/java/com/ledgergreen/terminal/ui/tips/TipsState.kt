@@ -25,6 +25,7 @@ data class TipsState(
     val orderAmountAfterTransaction: String,
     val error: String?,
     val errorMsg: String?,
+    val showTipAmount: Boolean,
 ){
     val proceedAvailable = signature != null && agreementAccepted
 }

@@ -2,8 +2,10 @@ package com.ledgergreen.terminal.ui.receipt
 
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Scaffold
@@ -118,10 +121,16 @@ fun ReceiptScreen(
 
 
     Scaffold(modifier = modifier,
-        backgroundColor = Color(0xFF06478D),
-        topBar = { SwitchAppBar(appBarConfig, navigateToHome) },) { paddingValues ->
+        backgroundColor = Color.White,
+        topBar = { SwitchAppBar(appBarConfig, navigateToHome,{}) },) { paddingValues ->
 
         Box(modifier = Modifier.fillMaxSize()){
+
+            Image(
+                painter = painterResource(id = R.drawable.botton_lines),
+                contentDescription = null,
+                modifier = Modifier.align(Alignment.BottomStart)
+            )
 
             if (state.amount.isEmpty() && state.orderAmount.isEmpty()) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
@@ -143,7 +152,7 @@ fun ReceiptScreen(
                         style = TextStyle(
                             fontSize = 14.sp,
                             fontWeight = FontWeight(600),
-                            color = Color(0xFFFFFFFF),
+                            color = Color(0xFFFF0043A5),
                             textAlign = TextAlign.Center
 
                         )
@@ -154,14 +163,49 @@ fun ReceiptScreen(
 //                    else
 //                        state.amount.drop(1)
 
-                    BottomNextButton(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(100.dp),
-                        onClick = onNext,
-                        enabled = !state.isLoading,
-                        text = "Transfer ${AppState1.totalAmount!!.toCurrencyString()}",
-                    )
+                    Box(modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(start = 8.dp, end = 8.dp, top = 10.dp)) {
+
+                        Row(
+                            // xfer icon button
+                            modifier = Modifier
+                                .border(
+                                    width = 1.dp,
+                                    color = Color.White,
+                                    shape = RoundedCornerShape(size = 10.dp),
+                                )
+                                .width(309.58.dp)
+                                .height(88.8.dp)
+                                .shadow(10.dp, RoundedCornerShape(size = 10.dp))
+                                .background(
+                                    color = if (!state.isLoading) Color(0xff0043A5) else Color(R.color.text_gray),
+                                    shape = RoundedCornerShape(10.dp)
+                                )
+                                .clickable { if (!state.isLoading) onNext() },
+                        ) {
+
+                            Text(text = "Transfer ${AppState1.totalAmount!!.toCurrencyString()}",
+                                fontSize = 25.sp,
+                                textAlign = TextAlign.Center,
+                                color = Color.White,
+                                modifier = Modifier.align(Alignment.CenterVertically).fillMaxWidth())
+
+                        }
+                        Image(painter = painterResource(id = R.drawable.button_design),
+                            contentDescription = null)
+                    }
+
+
+//                    BottomNextButton(
+//                        modifier = Modifier
+//                            .fillMaxWidth()
+//                            .height(100.dp),
+//                        onClick = onNext,
+//                        enabled = !state.isLoading,
+////                        text = "Transfer ${AppState1.totalAmount!!.toCurrencyString()}",
+//                        text = "Transfer",
+//                    )
 
                     Spacer(modifier = Modifier.weight(1f))
 
@@ -171,14 +215,19 @@ fun ReceiptScreen(
                             .padding(start = 12.dp, end = 12.dp, bottom = 15.dp, top = 40.dp)
                             .border(
                                 width = 1.dp,
-                                color = Color(0xFF6DA9FF),
+                                color = Color(0xFFFF0043A5),
                                 shape = RoundedCornerShape(size = 10.dp),
                             )
                             .background(
-                                color = Color(0x96002E71),
+                                color = Color.White,
                                 shape = RoundedCornerShape(size = 10.dp)
                             ),
                     ) {
+
+                        Image(modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .padding(top = 16.dp),
+                            painter = painterResource(id = R.drawable.tick_icon), contentDescription = null)
 
                         Text(
                             modifier = Modifier
@@ -189,7 +238,7 @@ fun ReceiptScreen(
                                 fontSize = 20.sp,
                                 lineHeight = 22.sp,
                                 fontWeight = FontWeight(400),
-                                color = Color.White,
+                                color = Color(0xFFFF0043A5),
                                 textAlign = TextAlign.Center
 
                             ),
@@ -202,13 +251,13 @@ fun ReceiptScreen(
                                 .padding(start = 16.dp, end = 16.dp, top = 10.dp, bottom = 15.dp)
                                 .border(
                                     width = 1.dp,
-                                    color = Color(0xFF6DA9FF),
+                                    color = Color(0xFFFF0043A5),
                                     shape = RoundedCornerShape(size = 5.dp),
                                 )
                                 .height(60.dp)
                                 .shadow(3.dp, RoundedCornerShape(size = 5.dp))
                                 .background(
-                                    color = Color(0xE2083364),
+                                    color = Color.White,
                                     shape = RoundedCornerShape(size = 5.dp)
                                 )
 
@@ -219,7 +268,7 @@ fun ReceiptScreen(
                                     .align(Alignment.CenterVertically),
                                 text = "Your Bank/Card Statement \n" +
                                     "will display as West Town Bank",
-                                color = Color.White,
+                                color = Color(0xFFFF0043A5),
                                 textAlign = TextAlign.Center,
                                 fontSize = 14.sp
 
@@ -238,7 +287,7 @@ fun ReceiptScreen(
                         style = TextStyle(
                             fontSize = 14.sp,
                             fontWeight = FontWeight(600),
-                            color = Color(0xFFFFFFFF),
+                            color = Color(0xFFFF0043A5),
                             textAlign = TextAlign.Center
 
                         )

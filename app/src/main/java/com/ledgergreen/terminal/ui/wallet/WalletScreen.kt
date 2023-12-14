@@ -147,8 +147,8 @@ fun WalletScreen(
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
-        backgroundColor = Color(0xFF06478D),
-        topBar = { SwitchAppBar(appBarConfig, navigateToHome) },
+        backgroundColor = Color.White,
+        topBar = { SwitchAppBar(appBarConfig, navigateToHome,{}) },
     ){
         paddingValues ->
         Log.i("WalletScreen", "WalletScreen: ${state.custResponse?.amount}")
@@ -156,6 +156,11 @@ fun WalletScreen(
         var isColumnVisible by remember { mutableStateOf(false) }
 
         Box(modifier = Modifier.fillMaxSize()) {
+
+            Image(painter = painterResource(id = R.drawable.botton_lines),
+                contentDescription = null,
+                modifier = Modifier.align(Alignment.BottomStart))
+
             if (state.isLoading) {
                 CircularProgressIndicator(modifier = Modifier.align(Center))
             } else {
@@ -177,14 +182,14 @@ fun WalletScreen(
 //                contentScale = ContentScale.None
 //            )
                     Text(
-                        modifier = Modifier.padding(15.dp, 0.dp, 0.dp, 10.dp),
-                        color = Color(0xFFFFFFFF),
+                        modifier = Modifier.padding(15.dp, 20.dp, 0.dp, 10.dp),
+                        color = Color(0xFFFF0043A5),
                         text = "Hi, ${state.custResponse?.name}",
                         style = TextStyle(
                             fontSize = 18.sp,
                             lineHeight = 22.sp,
                             fontWeight = FontWeight(600),
-                            color = Color(0xFFFFFFFF),
+                            color = Color.Black,
 
                             ),
                     )
@@ -244,7 +249,6 @@ fun WalletScreen(
 
                     Card(modifier = Modifier
                         .padding(start = 15.dp, end = 15.dp, bottom = 15.dp)
-                        .border(1.dp, Color.Black, RoundedCornerShape(5.dp),)
                         .background(
                             color = Color.White,
                             shape = RoundedCornerShape(size = 5.dp)
@@ -268,7 +272,7 @@ fun WalletScreen(
                                     fontSize = 17.sp,
                                     lineHeight = 22.sp,
                                     fontWeight = FontWeight(400),
-                                    color = Color(0xFF061F5C),
+                                    color = Color(0xFFFF0043A5),
 
                                     ),
                             )
@@ -286,7 +290,7 @@ fun WalletScreen(
                                     fontSize = 30.sp,
                                     lineHeight = 22.sp,
                                     fontWeight = FontWeight(600),
-                                    color = Color((0xFF061F5C)),
+                                    color = Color((0xFFFF0043A5)),
 
                                     ),
                             )
@@ -296,11 +300,11 @@ fun WalletScreen(
                                     .padding(start = 8.dp, end = 14.dp)
                                     .align(Alignment.CenterEnd),
                                 onClick = onAmountWithoutTip,
-                                border = BorderStroke(1.dp, color = Color((0xFF061F5C)))
+                                border = BorderStroke(1.dp, color = Color((0xFFFF0043A5)))
                             ) {
                                 Text(
                                     "Load Funds",
-                                    color = Color((0xFF061F5C)),
+                                    color = Color((0xFFFF0043A5)),
                                 )
                             }
 
@@ -309,35 +313,38 @@ fun WalletScreen(
                     }
                     if (!isColumnVisible) {
 
-                        Row(
-                            // xfer icon button
-                            modifier = Modifier
-                                .align(Alignment.CenterHorizontally)
-                                .height(100.dp)
-                                .padding(start = 8.dp, end = 8.dp, top = 38.dp)
-                                .border(
-                                    width = 1.dp,
-                                    color = Color(0xFF6DA9FF),
-                                    shape = RoundedCornerShape(size = 20.dp),
-                                )
-                                .width(333.dp)
-                                .height(70.dp)
-                                .shadow(3.dp, RoundedCornerShape(size = 20.dp))
-                                .background(
-                                    color = Color(0xE2083364),
-                                    shape = RoundedCornerShape(size = 20.dp)
-                                )
-                                .padding(start = 10.dp, top = 6.dp, end = 10.dp, bottom = 6.dp)
-                                .clickable { isColumnVisible = !isColumnVisible },
-                        ) {
-                            Image(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .align(Alignment.CenterVertically),
-                                painter = painterResource(id = R.drawable.xfericon2),
-                                contentDescription = "Icon"
-                            )
+                        Box(modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .padding(start = 8.dp, end = 8.dp, top = 50.dp)) {
 
+                            Row(
+                                // xfer icon button
+                                modifier = Modifier
+                                    .border(
+                                        width = 2.dp,
+                                        color = Color.White,
+                                        shape = RoundedCornerShape(size = 10.dp),
+                                    )
+                                    .width(309.58.dp)
+                                    .height(88.8.dp)
+                                    .shadow(10.dp, RoundedCornerShape(size = 10.dp))
+                                    .background(color = Color(0xff0043A5),
+                                        shape = RoundedCornerShape(10.dp))
+                                    .clickable { isColumnVisible = !isColumnVisible },
+                            ) {
+
+                                Image(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(60.dp)
+                                        .align(Alignment.CenterVertically),
+                                    painter = painterResource(id = R.drawable.xfericon2),
+                                    contentDescription = "Icon"
+                                )
+
+                            }
+                            Image(painter = painterResource(id = R.drawable.button_design),
+                                contentDescription = null)
                         }
                     }
 
@@ -361,16 +368,17 @@ fun WalletScreen(
                                 // friends and family button
                                 modifier = Modifier
                                     .align(Alignment.CenterHorizontally)
-                                    .padding(start = 16.dp, end = 16.dp, top = 10.dp)
+                                    .padding(start = 16.dp, end = 16.dp, top = 25.dp)
                                     .border(
-                                        width = 3.dp,
+                                        width = 2.dp,
                                         color = Color.White,
                                         shape = RoundedCornerShape(size = 10.dp),
                                     )
-                                    .fillMaxWidth()
-                                    .height(70.dp)
+                                    .shadow(10.dp, RoundedCornerShape(size = 10.dp))
+                                    .width(290.dp)
+                                    .height(80.dp)
                                     .background(
-                                        color = Color(0xE2FFFFFF),
+                                        color = Color(0xff0043A5),
                                         shape = RoundedCornerShape(size = 10.dp)
                                     )
                                     .padding(start = 10.dp, top = 6.dp, end = 10.dp, bottom = 6.dp)
@@ -391,7 +399,7 @@ fun WalletScreen(
                                         fontSize = 14.sp,
                                         lineHeight = 22.sp,
                                         fontWeight = FontWeight(600),
-                                        color = Color(0xE2083364),
+                                        color = Color.White,
                                         textAlign = TextAlign.Center,
                                     ),
                                 )
@@ -401,12 +409,12 @@ fun WalletScreen(
                             Text(
                                 modifier = Modifier
                                     .align(Alignment.CenterHorizontally)
-                                    .padding(start = 8.dp, end = 14.dp, top = 5.dp),
+                                    .padding(start = 8.dp, end = 14.dp, top = 15.dp),
                                 text = "OR",
                                 style = TextStyle(
                                     fontSize = 14.sp,
                                     fontWeight = FontWeight(600),
-                                    color = Color(0xFFFFFFFF),
+                                    color = Color(0xFF061F5C),
 
                                     )
                             )
@@ -415,16 +423,17 @@ fun WalletScreen(
                                 // goods and service button
                                 modifier = Modifier
                                     .align(Alignment.CenterHorizontally)
-                                    .padding(start = 16.dp, end = 16.dp, top = 5.dp)
+                                    .padding(start = 16.dp, end = 16.dp, top = 15.dp)
                                     .border(
-                                        width = 3.dp,
+                                        width = 2.dp,
                                         color = Color.White,
                                         shape = RoundedCornerShape(size = 10.dp)
                                     )
-                                    .fillMaxWidth()
-                                    .height(70.dp)
+                                    .shadow(10.dp, RoundedCornerShape(size = 10.dp))
+                                    .width(290.dp)
+                                    .height(80.dp)
                                     .background(
-                                        color = Color(0xE2FFFFFF),
+                                        color = Color(0xff0043A5),
                                         shape = RoundedCornerShape(size = 10.dp)
                                     )
                                     .padding(start = 10.dp, top = 6.dp, end = 10.dp, bottom = 6.dp)
@@ -443,7 +452,7 @@ fun WalletScreen(
                                         fontSize = 14.sp,
                                         lineHeight = 22.sp,
                                         fontWeight = FontWeight(600),
-                                        color = Color(0xE2083364),
+                                        color = Color.White,
                                         textAlign = TextAlign.Center,
                                     )
                                 )
@@ -526,7 +535,7 @@ fun WalletScreen(
                         style = TextStyle(
                             fontSize = 12.sp,
                             fontWeight = FontWeight(400),
-                            color = Color(0xFFFFFFFF),
+                            color = Color.Black,
 
                             textAlign = TextAlign.Center,
                             textDecoration = TextDecoration.Underline,

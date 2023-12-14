@@ -15,8 +15,11 @@ data class RecentTransactionsState(
     val filters: ImmutableList<TransactionsFilter>,
     val loading: Boolean,
     val error: String?,
-    val selectedOption : String,
+    val selectedOption: String,
+    val pageNumber: Int,
     val eventSink: (RecentTransactionsEvent) -> Unit,
+    val totalPages: Int,
+//    val updatedTransaction: ImmutableList<Transaction>
 )
 
 sealed class RecentTransactionsEvent {

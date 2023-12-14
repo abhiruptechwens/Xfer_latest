@@ -6,6 +6,7 @@ import com.ledgergreen.terminal.data.model.AmountDetails
 import com.ledgergreen.terminal.data.model.Signature
 import com.ledgergreen.terminal.data.network.model.CustResponse
 import com.ledgergreen.terminal.data.network.model.GetCustomer
+import com.ledgergreen.terminal.data.network.model.LoginResponse
 import com.ledgergreen.terminal.data.network.model.PinResponse
 import com.ledgergreen.terminal.data.network.model.TransactionGoodsAndServiceResponse
 import com.ledgergreen.terminal.data.network.model.TransactionResponse
@@ -35,6 +36,7 @@ class TransactionCache @Inject constructor() {
     private val _transactionResponse = MutableStateFlow<TransactionResponse?>(null)
     private val _transactionGoodsAndServiceResponse = MutableStateFlow<TransactionGoodsAndServiceResponse?>(null)
     private val _pinResponse = MutableStateFlow<PinResponse?>(null)
+    private val _loginResponse = MutableStateFlow<LoginResponse?>(null)
     private val _cardReaderResult = MutableStateFlow<CardDetails?>(null)
     private var _fromPage = ""
 
@@ -44,6 +46,7 @@ class TransactionCache @Inject constructor() {
     val signature: StateFlow<Signature?> = _signature
     val transactionResponse: StateFlow<TransactionResponse?> = _transactionResponse
     val pinResponse: StateFlow<PinResponse?> = _pinResponse
+    val loginResponse: StateFlow<LoginResponse?> = _loginResponse
     val cardReaderResult: StateFlow<CardDetails?> = _cardReaderResult
     val custWalletResponse: StateFlow<CustResponse?> = _customerValue
     val transactionGoodsAndServiceResponse: StateFlow<TransactionGoodsAndServiceResponse?> = _transactionGoodsAndServiceResponse
@@ -51,6 +54,10 @@ class TransactionCache @Inject constructor() {
 
     fun setPinResponse(pinResponse: PinResponse) {
         _pinResponse.value = pinResponse
+    }
+
+    fun setLoginResponse(loginResponse: LoginResponse) {
+        _loginResponse.value = loginResponse
     }
 
     fun setDocument(document: Document?) {
@@ -103,6 +110,13 @@ class TransactionCache @Inject constructor() {
         Timber.i("Clear transaction and pin data")
         clearTransaction()
         _pinResponse.value = null
+    }
+
+    fun clearLogin(){
+        Timber.i("Clear transaction and pin data")
+        clearTransaction()
+        clearTransactionResponse()
+        _loginResponse.value = null
     }
 
     fun setTransactionResult(transactionResponse: TransactionResponse) {

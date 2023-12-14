@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.ledgergreen.terminal.BuildConfig
 import com.ledgergreen.terminal.R
 import com.ledgergreen.terminal.ui.common.NexgoN6Preview
 import com.ledgergreen.terminal.ui.theme.LedgerGreenTheme
@@ -38,7 +39,7 @@ fun SplashScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = Color(0xFF06478D))
+                .background(color = Color.White)
 
                 .then(modifier),
             verticalArrangement = Arrangement.Center,
@@ -56,31 +57,31 @@ fun SplashScreen(
             )
 
             Spacer(modifier = Modifier.weight(1f))
-            Text(
-                modifier = Modifier,
-                text = "Version: 2.0.000.123",
-                style = MaterialTheme.typography.caption.copy(
-                    color = Color(0xB2BEB9B9),
-                ),
-                textAlign = TextAlign.Center,
-            )
+//            Text(
+//                modifier = Modifier,
+//                text = "Version: $BuildConfig.VERSION_NAME",
+//                style = MaterialTheme.typography.caption.copy(
+//                    color = Color(0xB2BEB9B9),
+//                ),
+//                textAlign = TextAlign.Center,
+//            )
             Text(
                 modifier = Modifier
                     .padding(bottom = 8.dp),
                 text = "Xfer powered by West Town Bank & Trust",
                 style = MaterialTheme.typography.caption.copy(
-                    color = Color.White,
+                    color = Color.Black,
                 ),
                 textAlign = TextAlign.Center,
             )
         }
 
-        Image(painter = painterResource(id = R.drawable.roundradianttop),
+        Image(painter = painterResource(id = R.drawable.top_lines),
             contentDescription = null,
-            modifier = Modifier.align(Alignment.TopStart))
-        Image(painter = painterResource(id = R.drawable.roundradiantbottom),
+            modifier = Modifier.align(Alignment.TopEnd))
+        Image(painter = painterResource(id = R.drawable.botton_lines),
             contentDescription = null,
-            modifier = Modifier.align(Alignment.BottomEnd)
+            modifier = Modifier.align(Alignment.BottomStart)
             )
     }
 }
@@ -97,17 +98,10 @@ fun SplashScreenPreview() {
 @Composable
 fun AppLogo(modifier: Modifier = Modifier) {
 
-    Box(
-        Modifier
-            .width(268.dp)
-            .height(268.dp)
-            .background(color = Color(0xFFFFFFFF), shape = RoundedCornerShape(size = 268.dp))) {
         Image(
             modifier = modifier
-                .fillMaxSize()
-                .then(Modifier.align(Alignment.Center)), // Center the image
-            painter = painterResource(id = R.drawable.applogo),
+                .fillMaxSize(), // Center the image
+            painter = painterResource(id = R.drawable.round_logo),
             contentDescription = "logo",
         )
-    }
 }

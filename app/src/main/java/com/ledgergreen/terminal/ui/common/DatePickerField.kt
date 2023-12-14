@@ -58,10 +58,10 @@ fun DatePickerField(
     Box(modifier = modifier) {
 
         val colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedBorderColor = Color.White, // Set the focused outline color
+            focusedBorderColor = Color.Black, // Set the focused outline color
             unfocusedBorderColor = Color.Black, // Set the unfocused outline color
-            cursorColor = Color.White,
-            textColor = Color.White// Set the cursor color
+            cursorColor = Color.Black,
+            textColor = Color.Black// Set the cursor color
         )
         OutlinedTextField(
             modifier = Modifier.focusable(false),

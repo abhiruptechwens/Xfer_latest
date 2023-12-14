@@ -8,6 +8,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.RemoveRedEye
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,10 +34,10 @@ fun PasswordTextField(
 ) {
 
     val colors = TextFieldDefaults.outlinedTextFieldColors(
-        focusedBorderColor = Color.White, // Set the focused outline color
-        unfocusedBorderColor = Color.Black, // Set the unfocused outline color
-        cursorColor = Color.Black,
-        textColor = Color.White// Set the cursor color
+        focusedBorderColor = Color(0xFF4D4D4D), // Set the focused outline color
+        unfocusedBorderColor = Color(0xFF4D4D4D), // Set the unfocused outline color
+        cursorColor = Color(0xFF4D4D4D),
+        textColor = Color(0xFF4D4D4D)// Set the cursor color
     )
     var showPassword by remember { mutableStateOf(false) }
     OutlinedTextField(
@@ -51,12 +52,12 @@ fun PasswordTextField(
         colors = colors,
         onValueChange = onValueChange,
         enabled = enabled,
-        label = { Text(error ?: label, color = Color(0xFFFFFFFF)) },
+        label = { Text(error ?: label, color = Color(0xFF4D4D4D)) },
         trailingIcon = {
             Icon(
-                Icons.Default.Lock,
+                Icons.Default.RemoveRedEye,
                 contentDescription = null,
-                tint = Color.White,
+                tint = Color(0xFF0043A5),
                 modifier = Modifier.clickable {
                     showPassword = !showPassword
                 },

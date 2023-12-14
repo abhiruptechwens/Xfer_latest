@@ -232,17 +232,18 @@ class ApiService @Inject constructor(
         searchQuery: String?,
         statuses: List<TransactionStatus>?,
         status: String
-    ): BaseResponse<Page<Transaction>> = httpClient.post(urlString = "getContactList") {
+    ): BaseResponse<Page> = httpClient.post(urlString = "getContactList") {
         setBody(
             ContactlessListRequest(
 //                from = from,
 //                to = to,
                 page = page,
                 size = size,
-                s = if (searchQuery != null || statuses != null) ContactlessListSearch(
-                    query = searchQuery,
-                    status = statuses,
-                ) else null,
+//                s = if (searchQuery != null || statuses != null) ContactlessListSearch(
+//                    query = searchQuery,
+//                    status = statuses,
+//                ) else null,
+                s = searchQuery,
                 status = status,
             ),
         )

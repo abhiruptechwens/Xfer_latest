@@ -1,11 +1,12 @@
 package com.ledgergreen.terminal.ui.transactions
 
-import android.graphics.Paint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,11 +19,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Card
 import androidx.compose.material.ChipDefaults.filterChipColors
@@ -38,16 +39,11 @@ import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -57,30 +53,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalTextInputService
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight.Companion.Bold
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ledgergreen.terminal.R
-import com.ledgergreen.terminal.data.model.Money.Companion.toMoney
-import com.ledgergreen.terminal.data.network.model.Associate
 import com.ledgergreen.terminal.data.network.model.Transaction
 import com.ledgergreen.terminal.data.network.model.TransactionStatus
 import com.ledgergreen.terminal.ui.common.ErrorDialog
 import com.ledgergreen.terminal.ui.common.NexgoN6Preview
+import com.ledgergreen.terminal.ui.common.TextFieldWithUnderlineAndTrailingIcon
 import com.ledgergreen.terminal.ui.common.topbar.DefaultAppBarConfig
 import com.ledgergreen.terminal.ui.common.topbar.SwitchAppBar
 import com.ledgergreen.terminal.ui.common.topbar.defaultAppBarConfig
@@ -88,6 +79,11 @@ import com.ledgergreen.terminal.ui.theme.LedgerGreenTheme
 import com.ledgergreen.terminal.ui.theme.success
 import com.ledgergreen.terminal.ui.theme.warning
 import com.ledgergreen.terminal.ui.transactions.domain.TransactionsFilter
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -104,6 +100,9 @@ fun RecentTransactionsScreen(
         updateSelectedOption = { option ->
             viewModel.updateSelectedOption(option)
         },
+        addMoreItems = { page ->
+            viewModel.addMoreItems(page)
+        },
         state = state,
         onFilterClick = { state.eventSink(RecentTransactionsEvent.FilterSelected(it)) },
         onSearchChange = { state.eventSink(RecentTransactionsEvent.SearchChanged(it)) },
@@ -113,14 +112,17 @@ fun RecentTransactionsScreen(
         modifier = modifier,
         navigateToHome = {
             navigateToHome()
-        }
+        },
     )
 }
+
+var loadMore = 1
 
 @Composable
 fun RecentTransactionsScreen(
     navigateToHome: () -> Unit,
     updateSelectedOption: (String) -> Unit,
+    addMoreItems: (Int) -> Unit,
     state: RecentTransactionsState,
     appBarConfig: DefaultAppBarConfig,
     onFilterClick: (TransactionsFilter) -> Unit,
@@ -135,16 +137,32 @@ fun RecentTransactionsScreen(
 
     Scaffold(
         modifier = modifier,
-        backgroundColor = Color(0xFF06478D),
-        topBar = { SwitchAppBar(appBarConfig,navigateToHome) },
+        backgroundColor = Color.White,
+        topBar = { SwitchAppBar(appBarConfig, navigateToHome, {}) },
     ) { paddingValues ->
 
-        val focusRequester = remember { FocusRequester() }
-        val focusManager = LocalFocusManager.current
-        Column(
-            modifier = Modifier.clickable { focusManager.clearFocus() }
-                .padding(paddingValues),
-        ) {
+        Box {
+
+            Image(
+                painter = painterResource(id = R.drawable.botton_lines),
+                contentDescription = null,
+                modifier = Modifier.align(Alignment.BottomStart)
+            )
+
+
+            val focusRequester = remember { FocusRequester() }
+            val focusManager = LocalFocusManager.current
+            Column(
+                modifier = Modifier
+                    .pointerInput(Unit) {
+                        detectTapGestures(
+                            onTap = {
+                                focusManager.clearFocus()
+                            },
+                        )
+                    }
+                    .padding(paddingValues),
+            ) {
 //            Row(
 //                modifier = Modifier
 //                    .fillMaxWidth()
@@ -171,29 +189,38 @@ fun RecentTransactionsScreen(
 //                }
 //            }
 
-            var expanded by remember { mutableStateOf(false) }
-            var selectedOption by remember { mutableStateOf("All") }
+                var expanded by remember { mutableStateOf(false) }
+                var selectedOption by remember { mutableStateOf("All") }
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-            ) {
-                SearchBar(
-                    searchQuery = state.searchQuery,
-                    onSearchChanged = onSearchChange,
-                    modifier = Modifier
-                        .weight(1.6f)
-                        .padding(start = 16.dp),
-                )
-
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(start = 10.dp, end = 16.dp, top = 8.dp)
-                        .background(Color.White, shape = RoundedCornerShape(5.dp))
-                        .align(Alignment.CenterVertically)
-                        .clickable { expanded = true },
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
                 ) {
+//                    SearchBar(
+//                        searchQuery = state.searchQuery,
+//                        onSearchChanged = onSearchChange,
+//                        modifier = Modifier
+//                            .weight(1.6f)
+//                            .padding(start = 16.dp),
+//                    )
+
+                    TextFieldWithUnderlineAndTrailingIcon(
+                        value = state.searchQuery,
+                        onValueChange = onSearchChange,
+                        label = "Search by name",
+                        modifier = Modifier.weight(1.6f)
+                            .padding(start = 16.dp).align(Alignment.Bottom),
+                        iconResId = R.drawable.search_icon,
+                    )
+
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(start = 10.dp, end = 16.dp, top = 8.dp)
+                            .background(Color.White, shape = RoundedCornerShape(5.dp))
+                            .align(Alignment.CenterVertically)
+                            .clickable { expanded = true },
+                    ) {
 //                    val focusManager = LocalFocusManager.current
 //                    CompositionLocalProvider(
 //                        LocalTextInputService provides null
@@ -230,59 +257,70 @@ fun RecentTransactionsScreen(
 //                            },
 //                        )
 //                    }
-                    Row(modifier = Modifier.height(56.dp)) {
-                        Spacer(modifier = Modifier.weight(1f))
-                        Text(
-                            text = selectedOption,
-                            modifier = Modifier
-                                .onGloballyPositioned { }
-                                .padding(start = 5.dp)
-                                .align(Alignment.CenterVertically),
-                            fontSize = 14.sp,
-                        )
-                        Spacer(modifier = Modifier.weight(1f))
-                        Icon(modifier = Modifier.align(Alignment.CenterVertically),
-                            painter = painterResource(id = R.drawable.drop_arrow),
-                            contentDescription = null,
-                        )
-                    }
 
-                    DropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false },
-                        modifier = Modifier
-                            .background(Color.White),
-                    ) {
-                        DropdownMenuItem(
-                            onClick = {
-                                selectedOption = "All"
-                                expanded = false
-                                updateSelectedOption(selectedOption)
-                            },
+                        Row(
+                            modifier = Modifier
+                                .height(40.dp)
+                                .padding(start = 10.dp)
+                                .border(
+                                    1.dp,
+                                    color = Color(0xFFFF0043A5),
+                                    shape = RoundedCornerShape(5.dp)
+                                )
                         ) {
-                            Text("All")
+                            Spacer(modifier = Modifier.weight(1f))
+                            Text(
+                                text = selectedOption,
+                                modifier = Modifier
+                                    .onGloballyPositioned { }
+                                    .padding(start = 5.dp)
+                                    .align(Alignment.CenterVertically),
+                                fontSize = 14.sp,
+                            )
+                            Spacer(modifier = Modifier.weight(1f))
+                            Icon(
+                                modifier = Modifier.align(Alignment.CenterVertically),
+                                painter = painterResource(id = R.drawable.drop_arrow),
+                                contentDescription = null,
+                            )
                         }
-                        DropdownMenuItem(
-                            onClick = {
-                                selectedOption = "Standard"
-                                expanded = false
-                                updateSelectedOption(selectedOption)
-                            },
+
+                        DropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false },
+                            modifier = Modifier
+                                .background(Color.White),
                         ) {
-                            Text("Standard")
-                        }
-                        DropdownMenuItem(
-                            onClick = {
-                                selectedOption = "Contactless"
-                                expanded = false
-                                updateSelectedOption(selectedOption)
-                            },
-                        ) {
-                            Text("Contactless")
+                            DropdownMenuItem(
+                                onClick = {
+                                    selectedOption = "All"
+                                    expanded = false
+                                    updateSelectedOption(selectedOption)
+                                },
+                            ) {
+                                Text("All")
+                            }
+                            DropdownMenuItem(
+                                onClick = {
+                                    selectedOption = "Standard"
+                                    expanded = false
+                                    updateSelectedOption(selectedOption)
+                                },
+                            ) {
+                                Text("Standard")
+                            }
+                            DropdownMenuItem(
+                                onClick = {
+                                    selectedOption = "Contactless"
+                                    expanded = false
+                                    updateSelectedOption(selectedOption)
+                                },
+                            ) {
+                                Text("Contactless")
+                            }
                         }
                     }
                 }
-            }
 
 //            TransactionFilter(
 //                filters = state.filters,
@@ -290,28 +328,33 @@ fun RecentTransactionsScreen(
 //                modifier = Modifier.padding(top = 4.dp),
 //            )
 
-            Box(
-                Modifier
-                    .weight(1f)
-                    .padding(horizontal = 16.dp, vertical = 10.dp),
-            ) {
-                if (state.transactions.isEmpty() && !state.loading) {
-                    Text(
-                        stringResource(R.string.recent_transactions_empty),
-                        style = MaterialTheme.typography.subtitle1.copy(
-                            fontStyle = FontStyle.Italic, color = Color.White
-                        ),
-                        modifier = Modifier.align(Alignment.Center),
+                Box(
+                    Modifier
+                        .weight(1f)
+                        .padding(horizontal = 16.dp, vertical = 10.dp),
+                ) {
+                    if (state.allTransactions.isEmpty() && !state.loading) {
+                        Text(
+                            stringResource(R.string.recent_transactions_empty),
+                            style = MaterialTheme.typography.subtitle1.copy(
+                                fontStyle = FontStyle.Italic, color = Color.White,
+                            ),
+                            modifier = Modifier.align(Alignment.Center),
+                        )
+                    }
+
+
+                    TransactionsList(
+                        transactions = state.allTransactions.toImmutableList(),
+                        modifier = Modifier.fillMaxSize(),
+                        currentPage = state.pageNumber,
+                        addMoreItems = addMoreItems,
+                        totalPages = state.totalPages
                     )
-                }
 
-                TransactionsList(
-                    transactions = state.transactions,
-                    modifier = Modifier.fillMaxSize(),
-                )
-
-                if (state.loading) {
-                    CircularProgressIndicator(Modifier.align(Alignment.Center))
+                    if (state.loading) {
+                        CircularProgressIndicator(Modifier.align(Alignment.Center))
+                    }
                 }
             }
         }
@@ -326,11 +369,11 @@ fun SearchBar(
 ) {
 
     val colors = TextFieldDefaults.outlinedTextFieldColors(
-        textColor = Color.White,
-        focusedBorderColor = Color.White, // Set the focused outline color
-        unfocusedBorderColor = Color.White, // Set the unfocused outline color
-        cursorColor = Color.White,
-        unfocusedLabelColor = Color.White,// Set the cursor color
+        textColor = Color.Black,
+        focusedBorderColor = Color(0xFFFF0043A5), // Set the focused outline color
+        unfocusedBorderColor = Color(0xFFFF0043A5), // Set the unfocused outline color
+        cursorColor = Color.Black,
+        unfocusedLabelColor = Color.Gray,// Set the cursor color
     )
     OutlinedTextField(
         value = searchQuery,
@@ -341,7 +384,7 @@ fun SearchBar(
             Text(
                 stringResource(R.string.search_by_name),
                 modifier = Modifier,
-                color = Color(0xFFFFFFFF),
+                color = Color.Black,
             )
         },
         keyboardOptions = KeyboardOptions(
@@ -423,8 +466,12 @@ fun SimpleFilterChip(
 @Composable
 fun TransactionsList(
     transactions: ImmutableList<Transaction>,
+    currentPage: Int,
+    addMoreItems: (Int)->Unit,
     modifier: Modifier = Modifier,
+    totalPages: Int
 ) {
+
     LazyColumn(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(15.dp),
@@ -432,7 +479,36 @@ fun TransactionsList(
         items(transactions, key = { it.id }) { transaction ->
             TransactionItem(transaction)
         }
+
+        item {
+            if (currentPage<totalPages) {
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "Load More",
+                    color = Color.Black,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentSize(Alignment.Center)
+                        .clickable {
+//                            if (currentPage+1<=totalPages)
+                            addMoreItems(currentPage + 1)
+                        },
+                    textAlign = TextAlign.Center,
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+        }
+
+
     }
+}
+
+fun String.capitalizeWords(): String {
+    return this.split(" ").joinToString(" ") { it.replaceFirstChar {
+        if (it.isLowerCase()) it.titlecase(
+            Locale.getDefault()
+        ) else it.toString()
+    } }
 }
 
 @Composable
@@ -443,7 +519,7 @@ fun TransactionItem(
     Card(
         modifier = modifier,
         elevation = 3.dp,
-        backgroundColor = Color(0xFF06478D),
+        backgroundColor = Color.White,
         border = BorderStroke(1.dp, Color(0xE24391B1)),
     ) {
         Column(modifier = Modifier.padding(8.dp)) {
@@ -455,27 +531,31 @@ fun TransactionItem(
                     .align(Alignment.CenterHorizontally),
             ) {
                 Text(
-                    text = transaction.customerName,
+                    text = transaction.customerName.capitalizeWords(),
                     style = MaterialTheme.typography.subtitle1,
-                    color = Color.White,
+                    color = Color(0xFFFF0043A5),
                     modifier = Modifier.align(Alignment.CenterVertically),
                 )
 
                 Spacer(modifier = Modifier.weight(1f))
+
+                Text(
+                    text = stringResource(transaction.status.displayableResId).uppercase(),
+                    color = transaction.status.contentColor, // Set text color, you can customize this
+                    modifier = Modifier
+                        .padding(3.dp),
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.Bold,
+                )
+
                 Text(
                     text = transaction.amount,
-                    fontSize = 20.sp,
+                    fontSize = 15.sp,
                     color = transaction.status.contentColor,
                     modifier = Modifier.align(Alignment.CenterVertically),
                 )
 
-                Text(
-                    text = stringResource(transaction.status.displayableResId),
-                    color = transaction.status.contentColor, // Set text color, you can customize this
-                    modifier = Modifier
-                        .padding(3.dp),
-                    fontSize = 16.sp,
-                )
+
             }
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -492,19 +572,20 @@ fun TransactionItem(
                 )
 
                 Spacer(Modifier.weight(1f))
-                Text(
-                    text = stringResource(id = R.string.card_last_digits),
-                    color = Color(0xFFA09D9D),
-                    style = MaterialTheme.typography.caption,
-                    modifier = Modifier.align(Alignment.CenterVertically),
-                )
+                if (transaction.cardNumber != null && transaction.cardNumber.length > 0)
+                    Text(
+                        text = stringResource(id = R.string.card_last_digits),
+                        color = Color(0xFFA09D9D),
+                        style = MaterialTheme.typography.caption,
+                        modifier = Modifier.align(Alignment.CenterVertically),
+                    )
 
                 Spacer(Modifier.width(5.dp))
 
                 Text(
                     text = transaction.cardNumber ?: "–",
                     modifier = Modifier,
-                    color = Color.White,
+                    color = Color.Black,
                 )
             }
 
@@ -517,10 +598,11 @@ fun TransactionItem(
                     .background(Color(0xE24391B1)),
             )
             TransactionTableCell(
-                title = stringResource(R.string.associate),
+//                title = stringResource(R.string.associate),
                 value = transaction.associate,
                 modifier = Modifier,
-                valueColor = Color.White,
+                valueColor = Color.Black,
+                date = ParsedDateTimeDisplay(transaction.date),
             )
 //                Row(
 //                    horizontalArrangement = Arrangement.SpaceBetween,
@@ -544,12 +626,22 @@ fun TransactionItem(
     }
 }
 
+fun ParsedDateTimeDisplay(dateTimeString: String): String {
+    // Parse the date-time string using java.time
+    val instant = Instant.parse(dateTimeString)
+    val localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault())
+    val formattedDateTime =
+        localDateTime.format(DateTimeFormatter.ofPattern("MMM-dd-yyyy HH:mm:ss"))
+    return formattedDateTime
+}
+
 val TransactionStatus.contentColor: Color
     @Composable
     get() = when (this) {
         TransactionStatus.Paid -> MaterialTheme.colors.success
         TransactionStatus.Expired -> MaterialTheme.colors.error
         TransactionStatus.Pending -> MaterialTheme.colors.warning
+        TransactionStatus.Failed -> MaterialTheme.colors.error
     }
 
 val TransactionStatus.displayableResId: Int
@@ -557,24 +649,29 @@ val TransactionStatus.displayableResId: Int
         TransactionStatus.Paid -> R.string.transaction_status_paid
         TransactionStatus.Expired -> R.string.transaction_status_expired
         TransactionStatus.Pending -> R.string.transaction_status_pending
+        TransactionStatus.Failed -> R.string.transaction_status_failed
     }
 
 @Composable
 private fun TransactionTableCell(
-    title: String,
+//    title: String,
     value: String,
+    date: String,
     modifier: Modifier = Modifier,
     valueColor: Color? = null,
 ) {
     Row(modifier = modifier.fillMaxWidth()) {
         Text(
-            text = title,
+            modifier = Modifier.width(150.dp),
+            text = value,
             color = Color(0xFFA09D9D),
-            style = MaterialTheme.typography.caption,
+            style = (valueColor?.let {
+                MaterialTheme.typography.subtitle1.copy(color = it)
+            } ?: LocalTextStyle.current).copy(fontSize = 14.sp),
         )
         Spacer(Modifier.weight(1f))
         Text(
-            text = value,
+            text = date,
             modifier = Modifier,
             style = (valueColor?.let {
                 MaterialTheme.typography.subtitle1.copy(color = it)
@@ -583,18 +680,19 @@ private fun TransactionTableCell(
     }
 }
 
-val previewTransactions = List(10) { index ->
+val previewTransactions = List(2) { index ->
     Transaction(
         id = "id_$index",
-        customerName = "Customer Name $index",
+        customerName = "Customer name $index",
         amount = "$${10.0 + index * 5}",
         status = TransactionStatus.values()[index % 3],
         associate = "Associate Name very long name",
         associateId = 10,
         phone = index.toString().padStart(10, '1'),
         cardNumber = index.toString().padStart(4, '0'),
+        date = "2023-07-08T11:08:54.446Z",
     )
-}
+}.toList()
 
 @NexgoN6Preview
 @Composable
@@ -602,7 +700,7 @@ fun RecentTransactionsScreenPreview() {
     LedgerGreenTheme {
         RecentTransactionsScreen(
             state = RecentTransactionsState(
-                allTransactions = previewTransactions,
+                allTransactions = previewTransactions.toImmutableList(),
                 transactions = previewTransactions.toImmutableList(),
                 searchQuery = "Customer",
                 filters = previewFilters,
@@ -610,14 +708,17 @@ fun RecentTransactionsScreenPreview() {
                 error = null,
                 eventSink = { },
                 selectedOption = "Contactless",
+                pageNumber = 1,
+                totalPages = 1,
             ),
             updateSelectedOption = { },
+            addMoreItems = { },
             appBarConfig = DefaultAppBarConfig.preview,
             onFilterClick = { },
             onSearchChange = { },
             onRefresh = { },
             onErrorShown = { },
-            navigateToHome = { }
+            navigateToHome = { },
         )
     }
 }
@@ -628,7 +729,7 @@ fun RecentTransactionsScreenEmptyPreview() {
     LedgerGreenTheme {
         RecentTransactionsScreen(
             state = RecentTransactionsState(
-                allTransactions = emptyList(),
+                allTransactions = persistentListOf(),
                 transactions = persistentListOf(),
                 searchQuery = "Customer",
                 filters = previewFilters,
@@ -636,14 +737,17 @@ fun RecentTransactionsScreenEmptyPreview() {
                 error = null,
                 eventSink = { },
                 selectedOption = "Contactless",
-            ),
+                pageNumber = 1,
+                totalPages = 5,
+                ),
             updateSelectedOption = { },
+            addMoreItems = { },
             appBarConfig = DefaultAppBarConfig.preview,
             onFilterClick = { },
             onSearchChange = { },
             onRefresh = { },
             onErrorShown = { },
-            navigateToHome = { }
+            navigateToHome = { },
         )
     }
 }
@@ -686,6 +790,7 @@ fun TransactionItemPreview() {
                 associateId = 10,
                 cardNumber = "8048",
                 phone = "1234567890",
+                date = "2023-07-08T11:08:54.446Z",
             ),
         )
     }

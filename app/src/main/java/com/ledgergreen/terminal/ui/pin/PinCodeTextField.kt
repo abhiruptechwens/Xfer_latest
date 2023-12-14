@@ -36,7 +36,7 @@ fun PinCodeTextField(
         readOnly = true,
         textStyle = TextStyle(
             fontSize = 20.sp,
-            color = Color.White
+            color = Color(0xFF001A4B)
         ),
         onValueChange = {
             if (it.length <= pinCodeCount) {
@@ -74,12 +74,12 @@ fun CharView(
     Text(
         modifier = Modifier
             .width(64.dp)
-            .bottomBorder(1.dp, MaterialTheme.colors.onBackground)
+            .bottomBorder(1.dp, Color(0xFF001A4B))
             .padding(2.dp)
             .then(modifier),
         text = char,
         style = MaterialTheme.typography.h4,
-        color = MaterialTheme.colors.onPrimary,
+        color = Color(0xFF001A4B),
         textAlign = TextAlign.Center,
     )
 }
@@ -94,7 +94,7 @@ fun Modifier.bottomBorder(strokeWidth: Dp, color: Color) = composed(
             val height = size.height - strokeWidthPx / 2
 
             drawLine(
-                color = Color.White,
+                color = Color(0xFF001A4B),
                 start = Offset(x = 0f, y = height),
                 end = Offset(x = width, y = height),
                 strokeWidth = strokeWidthPx,

@@ -3,6 +3,8 @@ package com.ledgergreen.terminal.ui.transactions.domain
 import androidx.compose.ui.text.toLowerCase
 import com.ledgergreen.terminal.data.network.ApiService
 import com.ledgergreen.terminal.data.network.exception.RequestException
+import com.ledgergreen.terminal.data.network.model.Page
+import com.ledgergreen.terminal.data.network.model.StringToJsonData
 import com.ledgergreen.terminal.data.network.model.Transaction
 import com.ledgergreen.terminal.ui.common.failure.displayableErrorMessage
 import com.ledgergreen.terminal.ui.common.stringresources.StringResources
@@ -13,17 +15,20 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
+import kotlinx.serialization.json.Json
 import timber.log.Timber
 
-private const val defaultPageSize = 200
+private const val defaultPageSize = 10
 
 class GetRecentTransactionsUseCase @Inject constructor(
     private val apiService: ApiService,
     private val stringResources: StringResources,
 ) {
     suspend operator fun invoke(
-        option:String
-    ): Result<List<Transaction>> {
+        option:String,
+        searchQuery:String?,
+        page:Int
+    ): Result<Page> {
         val today = Clock.System.now()
             .toLocalDateTime(TimeZone.currentSystemDefault())
             .date
@@ -36,25 +41,49 @@ class GetRecentTransactionsUseCase @Inject constructor(
             val baseResponse = apiService.transactionsList(
                 from = from,
                 to = to,
-                page = 1,
+                page = page,
                 size = defaultPageSize,
-                searchQuery = null,
+                searchQuery = searchQuery,
                 statuses = null,
                 status = option
             )
             if (baseResponse.status && baseResponse.response != null) {
-                baseResponse.response.records
+                baseResponse.response
             } else {
                 throw RequestException(baseResponse.message)
             }
         }.fold(
             onSuccess = {
-                Timber.d("Got transactions ${it.size}")
+//                Timber.d("Got transactions ${it.size}")
                 Result.success(it)
             },
             onFailure = {
-                Timber.w(it, "Unable to receive recent transactions")
-                val errorMessage = it.displayableErrorMessage(stringResources)
+                val text = it.message
+
+                // Using regular expression
+                val regex = Regex("\\{(.+?)\\}")
+                val matchResult = regex.find(text!!.asSequence().toString())
+                val resultRegex = matchResult?.groups?.get(1)?.value
+                println(resultRegex)
+                var errorMessage: String =""
+
+                if (text.contains(regex)){
+                    val startIndex = text.indexOf('{') + 1
+                    val endIndex = text.indexOf('}')
+                    val resultSubstring = text.substring(startIndex, endIndex)
+                    val resultSubstringInsideCurlyBraces = "{${text.substring(startIndex, endIndex)}}}"
+
+                    val jsonString = resultSubstringInsideCurlyBraces
+
+                    println(jsonString)
+                    // Parse the JSON string into a MyData object
+                    val myData: StringToJsonData = Json{ ignoreUnknownKeys = true }.decodeFromString(jsonString)
+                    errorMessage = myData.message
+                }
+                else{
+                    errorMessage = text
+                }
+
                 Result.failure(RequestException(errorMessage))
             },
         )

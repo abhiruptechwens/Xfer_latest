@@ -18,6 +18,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -111,39 +112,52 @@ fun AgreementScreen(
 
     Scaffold(
         modifier = modifier,
-        backgroundColor = Color(0xFF06478D),
-        topBar = { SwitchAppBar(appBarConfig, onNavigatHome)},
+        backgroundColor = Color.White,
+        topBar = { SwitchAppBar(appBarConfig, onNavigatHome,{})},
     ) { paddingValues ->
-        Column(
-            Modifier
-                .padding(paddingValues)
-                .padding(16.dp),
-        ) {
 
-            Card(Modifier
-                .width(164.dp),
-                elevation = 16.dp,
-                border = BorderStroke(1.dp, MaterialTheme.colors.onSurface)) {
-                Image(modifier = Modifier.padding(5.dp),painter = painterResource(R.drawable.west_bank_logo), contentDescription = "bank_logo")
-            }
-
-            Title(stringResource(R.string.accept_agreement))
-            Agreement(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(top = 8.dp),
-                text = state.agreementText,
+        Box {
+            Image(
+                painter = painterResource(id = R.drawable.botton_lines),
+                contentDescription = null,
+                modifier = Modifier.align(Alignment.BottomStart)
             )
+
+            Column(
+                Modifier
+                    .padding(paddingValues)
+                    .padding(16.dp),
+            ) {
+
+                Card(
+                    Modifier
+                        .width(164.dp),
+                    elevation = 5.dp,
+                ) {
+                    Image(
+                        modifier = Modifier.padding(5.dp),
+                        painter = painterResource(R.drawable.west_bank_logo),
+                        contentDescription = "bank_logo"
+                    )
+                }
+
+                Title(text = stringResource(R.string.accept_agreement))
+                Agreement(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(top = 8.dp),
+                    text = state.agreementText,
+                )
                 Card(
                     Modifier
                         .height(150.dp)
                         .padding(vertical = 5.dp),
-                    elevation = 16.dp,
+                    elevation = 5.dp,
                     border = BorderStroke(1.dp, MaterialTheme.colors.onSurface),
                 ) {
-                        SignatureView(
-                            onSigned = onSigned,
-                        )
+                    SignatureView(
+                        onSigned = onSigned,
+                    )
                 }
 
                 BottomNextButton(
@@ -152,6 +166,7 @@ fun AgreementScreen(
                     onClick = onProceed,
                     enabled = state.proceedAvailable,
                 )
+            }
         }
     }
 }
@@ -181,7 +196,7 @@ fun Agreement(
                 .padding(top = 8.dp, bottom = 8.dp),
             text = text,
             style = MaterialTheme.typography.caption,
-            color = Color.White
+            color = Color.Black
         )
     }
 }

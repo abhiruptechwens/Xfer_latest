@@ -4,15 +4,15 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.ledgergreen.terminal",
+  "applicationId": "com.xfer.terminal",
   "variantName": "nexgoRelease",
   "elements": [
     {
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 52,
-      "versionName": "1.2.5-nexgo",
+      "versionCode": 580,
+      "versionName": "1.6.3-Xfer",
       "outputFile": "app-nexgo-release.apk"
     }
   ],

@@ -2,6 +2,7 @@
 
 package com.ledgergreen.terminal.ui.common
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -22,8 +23,13 @@ import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ledgergreen.terminal.R
 import com.ledgergreen.terminal.ui.common.ledgergreenicons.IcBackspace
 import com.ledgergreen.terminal.ui.theme.LedgerGreenTheme
 
@@ -53,13 +59,17 @@ fun PinPad(
         }
         PinPadRow(Modifier.padding(top = 4.dp)) {
             PinPadSpecialButton(enabled = enabled, onClick = onReset) {
-                Icon(
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .size(24.dp),
-                    imageVector = Icons.Default.Refresh,
-                    contentDescription = null,
-                )
+                Row(Modifier.align(Alignment.Center)) {
+                    Icon(
+                        modifier = Modifier
+                            .size(24.dp),
+                        imageVector = Icons.Default.Refresh,
+                        contentDescription = null,
+                    )
+                    Text(text = "Reset", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+
+                }
+
             }
             PinPadButton(value = 0, enabled = enabled, onClick = { onValueChange(0) })
             PinPadSpecialButton(enabled = enabled, onClick = onBackspace) {
@@ -67,7 +77,7 @@ fun PinPad(
                     modifier = Modifier
                         .align(Alignment.Center)
                         .size(24.dp),
-                    imageVector = LedgerGreenIcons.IcBackspace,
+                    painter = painterResource(id = R.drawable.clear_btn),
                     contentDescription = null,
                 )
             }
@@ -93,6 +103,7 @@ private fun Modifier.pinPadButtonModifier(): Modifier {
         .padding(horizontal = 4.dp)
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun RowScope.PinPadButton(
     value: Int,
@@ -104,8 +115,9 @@ private fun RowScope.PinPadButton(
             .pinPadButtonModifier()
             .weight(1f),
         enabled = enabled,
-        elevation = 8.dp,
+        elevation = 2.dp,
         onClick = onClick,
+        border = BorderStroke(1.dp, color = Color(0xFF0043A5))
     ) {
         Box(Modifier.fillMaxSize()) {
             Text(
@@ -130,8 +142,9 @@ private fun RowScope.PinPadSpecialButton(
             .pinPadButtonModifier()
             .weight(1f),
         enabled = enabled,
-        elevation = 8.dp,
+        elevation = 2.dp,
         onClick = onClick,
+        border = BorderStroke(1.dp, color = Color(0xFF0043A5))
     ) {
         Box(Modifier.fillMaxSize()) {
             content()

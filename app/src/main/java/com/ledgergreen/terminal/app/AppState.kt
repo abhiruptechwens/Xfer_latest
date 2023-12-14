@@ -24,8 +24,8 @@ data class AppLockState(
 
 object AppState1 {
 
+    var lastVersionCode: Int = 1
     var savedCardDetails: Card? = null
-    lateinit var savedCards: MutableList<Card>
     var balanceAmount : Money? = null
     var totalAmount : Money? = null
     var cardFee : Double? = null
@@ -38,6 +38,7 @@ object AppState1 {
     var walletDetails: WalletDetails? = null
     var tips :Double = 0.0
     var customerExtId = ""
+    var dlError = ""
 }
 
 object PageState {

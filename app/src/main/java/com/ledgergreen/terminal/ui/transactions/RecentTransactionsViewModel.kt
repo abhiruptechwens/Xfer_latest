@@ -1,6 +1,5 @@
 package com.ledgergreen.terminal.ui.transactions
 
-import androidx.compose.ui.text.toLowerCase
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ledgergreen.terminal.R
@@ -32,8 +31,9 @@ class RecentTransactionsViewModel @Inject constructor(
     private val _state = MutableStateFlow(
         RecentTransactionsState(
             selectedOption = "All",
-            allTransactions = emptyList(),
+            allTransactions = persistentListOf(),
             transactions = persistentListOf(),
+//            updatedTransaction = persistentListOf(),
             searchQuery = "",
             filters = (TransactionStatus.values().map {
                 TransactionsFilter.TransactionStatusFilter(it, false)
@@ -41,19 +41,28 @@ class RecentTransactionsViewModel @Inject constructor(
                 .toPersistentList(),
             loading = false,
             error = null,
+            pageNumber = 1,
             eventSink = ::eventSink,
+            totalPages = 0,
         ),
     )
 
     val state: StateFlow<RecentTransactionsState> = _state
 
     init {
-        onRefresh()
+        onRefresh(1)
     }
 
     fun updateSelectedOption(option: String) {
         _state.value = _state.value.copy(selectedOption = option)
-        onRefresh()
+        onRefresh(1)
+    }
+
+    fun addMoreItems(page:Int) {
+        onRefresh(page)
+        _state.value = state.value.copy (
+            pageNumber = page
+        )
     }
 
     private fun eventSink(event: RecentTransactionsEvent) {
@@ -61,25 +70,34 @@ class RecentTransactionsViewModel @Inject constructor(
             is RecentTransactionsEvent.FilterSelected -> onFilterChange(event.filter)
             is RecentTransactionsEvent.SearchChanged -> onSearchChanged(event.searchQuery)
             is RecentTransactionsEvent.optionSelected -> updateSelectedOption(event.option)
-            RecentTransactionsEvent.Refresh -> onRefresh()
+            RecentTransactionsEvent.Refresh -> onRefresh(1)
             RecentTransactionsEvent.OnErrorShown -> onErrorShown()
         }
     }
 
-    private fun onRefresh() {
+    private fun onRefresh(page:Int) {
         viewModelScope.launch {
             _state.value = state.value.copy(
                 loading = true,
             )
 
-            getRecentTransactions(state.value.selectedOption.lowercase())
+            if (page==1){
+                _state.value = state.value.copy(
+                    allTransactions = persistentListOf(),
+                )
+            }
+
+            getRecentTransactions(state.value.selectedOption.lowercase(),state.value.searchQuery,page)
                 .fold(
-                    onSuccess = { transactions ->
+                    onSuccess = { response ->
                         _state.value = state.value.copy(
-                            allTransactions = transactions,
-                            transactions = filterTransactions(transactions = transactions)
+                            //have to change
+                            allTransactions = state.value.allTransactions+response.records,
+//                            updatedTransaction = state.value.allTransactions+response.records,
+                            transactions = filterTransactions(transactions = state.value.allTransactions+response.records)
                                 .toPersistentList(),
                             loading = false,
+                            totalPages = response.totalPages
                         )
                     },
                     onFailure = {
@@ -95,6 +113,7 @@ class RecentTransactionsViewModel @Inject constructor(
         }
     }
 
+    // have to close this
     private fun filterTransactions(
         transactions: List<Transaction> = state.value.allTransactions,
         searchQuery: String = state.value.searchQuery,
@@ -103,13 +122,15 @@ class RecentTransactionsViewModel @Inject constructor(
         transactions, searchQuery, filters,
     )
 
+    // have to close this
     private fun onSearchChanged(searchQuery: String) {
         _state.value = state.value.copy(
             searchQuery = searchQuery,
-            transactions = filterTransactions(
-                searchQuery = searchQuery,
-            ).toPersistentList(),
+//            transactions = filterTransactions(
+//                searchQuery = searchQuery,
+//            ).toPersistentList(),
         )
+        onRefresh(1)
     }
 
     private fun onFilterChange(filter: TransactionsFilter) {

@@ -36,10 +36,10 @@ fun BottomNextButton(
 
     val backgroundModifier = if (enabled) {
         Modifier
-            .background(Color(0xE2FFFFFF), shape = RoundedCornerShape(20.dp))
+            .background(Color(0xFFFF0043A5), shape = RoundedCornerShape(5.dp))
     } else {
         Modifier
-            .background(Color.Gray, shape = RoundedCornerShape(20.dp))
+            .background(Color.DarkGray, shape = RoundedCornerShape(5.dp))
     }
 
     Row(
@@ -47,11 +47,11 @@ fun BottomNextButton(
             .then(modifier)
             .padding(start = 15.dp, end = 15.dp, top = 10.dp, bottom = 5.dp)
             .width(333.dp)
-            .height(60.dp)
+            .height(70.dp)
             .border(
-                width = 3.dp,
-                color = Color.White,
-                shape = RoundedCornerShape(size = 20.dp),
+                width = 1.dp,
+                color = Color(0xFFFF0043A5),
+                shape = RoundedCornerShape(size = 5.dp),
             )
             .then(backgroundModifier)
 //            .padding(start = 10.dp, top = 6.dp, end = 10.dp, bottom = 6.dp)
@@ -66,10 +66,10 @@ fun BottomNextButton(
                 .align(Alignment.CenterVertically),
             text = text,
             style = TextStyle(
-                fontSize = 24.sp,
+                fontSize = 21.sp,
                 lineHeight = 22.sp,
                 fontWeight = FontWeight(600),
-                color = Color(0xE2083364),
+                color = Color.White,
                 textAlign = TextAlign.Center,
             )
         )

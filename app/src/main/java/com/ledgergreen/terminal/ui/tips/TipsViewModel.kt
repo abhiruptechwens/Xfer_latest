@@ -60,7 +60,8 @@ class TipsViewModel @Inject constructor(
             receiptId = "",
             orderAmountAfterTransaction = "",
             error = null,
-            errorMsg = null
+            errorMsg = null,
+            showTipAmount = transactionCache.pinResponse.value!!.store.showTipAmount,
         ),
     )
 

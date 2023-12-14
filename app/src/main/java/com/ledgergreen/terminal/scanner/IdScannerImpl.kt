@@ -18,28 +18,39 @@ class IdScannerImpl @Inject constructor(
     override suspend fun scan(): Document? = suspendCancellableCoroutine { continuation ->
         val scannerCallback = object : ScannerCallback {
             override fun onResult(result: String) {
-                parsers.find { parser ->
-                    parser.isApplicable(result)
+                try {
+                    parsers.find { parser ->
+                        parser.isApplicable(result)
+                    }
+                        ?.parse(result)
+                        ?.onSuccess { document ->
+                            continuation.resumeIfActive(document)
+                        }
+                        ?.onFailure { exception ->
+                            Timber.w(exception, "Unable to parse Document")
+                            continuation.resumeWithExceptionIfActive(exception)
+                        }
+                        ?: continuation.resumeWithExceptionIfActive(ScannerException("Unsupported document"))
+                } catch (e: Exception) {
+                    Timber.e(e, "Error in onResult")
+                    continuation.resumeWithExceptionIfActive(e)
                 }
-                    ?.parse(result)
-                    ?.fold(
-                        onSuccess = {
-                            continuation.resumeIfActive(it)
-                        },
-                        onFailure = {
-                            Timber.w(it, "Unable to parse Document")
-                            continuation.resumeWithExceptionIfActive(it)
-                        },
-                    )
-                    ?: continuation.resumeWithExceptionIfActive(ScannerException("Unsupported document"))
             }
 
             override fun onError(error: String) {
-                continuation.resumeWithExceptionIfActive(ScannerException(error))
+                try {
+                    continuation.resumeWithExceptionIfActive(ScannerException(error))
+                } catch (e: Exception) {
+                    Timber.e(e, "Error in onError")
+                }
             }
 
             override fun onCancel() {
-                continuation.resumeIfActive(null)
+                try {
+                    continuation.resumeIfActive(null)
+                } catch (e: Exception) {
+                    Timber.e(e, "Error in onCancel")
+                }
             }
         }
 
@@ -51,6 +62,7 @@ class IdScannerImpl @Inject constructor(
 
         scanner.start(scannerCallback)
     }
+
 
 
     // There's a bug in MF SDK. The more you call startScan, the more times you'll receive callback

@@ -12,16 +12,16 @@
     <string name="enter_card_details">Enter Card Details</string>
     <string name="pay">Pay %1$s</string>
     <string name="load">Load %1$s</string>
-    <string name="billing_zip_code">Billing zip code</string>
+    <string name="billing_zip_code">Billing ZIP code</string>
     <string name="security_code">Security code</string>
-    <string name="amount_details">Amount details</string>
-    <string name="order_amount_colon">Order amount:</string>
-    <string name="tip_amount_colon">Tip amount:</string>
-    <string name="compliance_fee_colon">Compliance fee:</string>
+    <string name="amount_details">Amount Details</string>
+    <string name="order_amount_colon">Order Amount:</string>
+    <string name="tip_amount_colon">Tip Amount:</string>
+    <string name="compliance_fee_colon">Compliance Fee:</string>
     <string name="card_holder_name">Card Holder Name</string>
     <string name="card_number">Card number</string>
     <string name="expiration">Expiration</string>
-    <string name="insert_chip_tap_or_swipe_card">Insert chip, tap or swipe card</string>
+    <string name="insert_chip_tap_or_swipe_card">Insert chip, tap or swipe card\nLong press to delete card</string>
     <string name="enter_manually">Enter Manually</string>
     <string name="next">Next</string>
     <string name="failed">Failed</string>
@@ -93,6 +93,7 @@
     <string name="transaction_status_paid">Paid</string>
     <string name="transaction_status_expired">Expired</string>
     <string name="transaction_status_pending">Pending</string>
+    <string name="transaction_status_failed">Failed</string>
     <string name="recent_transactions_filter_associate_only">Created by me</string>
     <string name="recent_transactions_empty">Transactions not found</string>
 
@@ -131,7 +132,7 @@
     <string name="error_compliance_fee_with_message">Unable to get compliance fee: %1$s</string>
     <string name="error_wrong_card_number">Wrong card number</string>
     <string name="document_id">Document Id :</string>
-    <string name="phone_no">Phone Number</string>
+    <string name="phone_no">Phone Number :</string>
     <string name="state_name">State :</string>
     <string name="title_activity_wallet_screen">WalletScreen</string>
     <string name="driver_s_license_passport">Driver\'s License</string>
@@ -141,8 +142,15 @@
     <string name="scan_card">Scan Card</string>
     <string name="xfer">Xfer</string>
     <string name="enter_full_name">Enter Full Name</string>
+    <string name="enter_name">Enter Name</string>
     <string name="xfer_powered_by_west_town_bank_trust"><![CDATA[Xfer powered by West Town Bank & Trust]]></string>
     <string name="account_number">Account Number</string>
     <string name="search_by_name">Search by Name</string>
+    <string name="changlog_title">ChangeLogs</string>
+
+
+    <string name="changelogs">
+        1. Minor bug fixes \n2. UI Revamp\n
+    </string>
 
 </resources>

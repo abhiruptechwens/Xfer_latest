@@ -51,10 +51,16 @@ fun NoBalanceWalletDialog(
 
             Box {
 
-                Icon(modifier = Modifier.align(Alignment.TopEnd).clickable { onReject() },
+                Icon(modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .clickable { onReject() },
                     painter = painterResource(id = R.drawable.close), contentDescription = null)
 
                 Column(modifier = Modifier.padding(16.dp)) {
+
+                    Image(modifier = Modifier.align(Alignment.CenterHorizontally),
+                        painter = painterResource(id = R.drawable.no_balance),
+                        contentDescription = null)
 
                     Text(
                         modifier = Modifier

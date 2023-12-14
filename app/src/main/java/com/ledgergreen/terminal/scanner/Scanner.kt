@@ -10,7 +10,7 @@ interface Scanner {
     fun stop()
 
     companion object {
-        const val scannerTimeoutSec = 60
+        const val scannerTimeoutSec = 30
     }
 }
 

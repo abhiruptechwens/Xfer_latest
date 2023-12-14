@@ -18,4 +18,5 @@ data class HomeState(
     val onErrorShown: () -> Unit,
     val navigateNext: Boolean,
     val isDialogShown: Boolean,
+    val scanError: String?,
 )

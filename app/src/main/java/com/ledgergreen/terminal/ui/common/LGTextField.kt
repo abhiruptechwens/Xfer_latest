@@ -6,23 +6,29 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.Divider
 import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.ledgergreen.terminal.ui.theme.LedgerGreenTheme
 
 @Composable
@@ -48,19 +54,20 @@ fun LGTextField(
 //    shape: Shape = RoundedCornerShape(15),
 ) {
     Column(modifier) {
-        label?.let { it() }
+//        label?.let { it() }
 
-        OutlinedTextFieldBackground(color = Color.White) {
+        OutlinedTextFieldBackground(color = Color.White, isError = isError) {
             OutlinedTextField(
                 value = value,
                 onValueChange = onValueChange,
                 enabled = enabled,
                 readOnly = readOnly,
-                textStyle = textStyle,
+                textStyle = textStyle.copy(textAlign = TextAlign.Left,
+                    fontSize = 13.sp),
                 placeholder = placeholder,
-                leadingIcon = leadingIcon,
-                trailingIcon = trailingIcon,
-                isError = isError,
+//                leadingIcon = leadingIcon,
+                trailingIcon = leadingIcon,
+//                isError = isError,
                 visualTransformation = visualTransformation,
                 keyboardOptions = keyboardOptions,
                 keyboardActions = keyboardActions,
@@ -68,15 +75,23 @@ fun LGTextField(
                 maxLines = maxLines,
                 minLines = minLines,
                 interactionSource = interactionSource,
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier,
+                colors = TextFieldDefaults.textFieldColors(
+                    focusedIndicatorColor = Color.White,
+                    unfocusedIndicatorColor = Color.White,
+                    backgroundColor = Color.White
+                )
+
             )
+
+
         }
     }
 }
 
 @Composable
 fun OutlinedTextFieldBackground(
+    isError: Boolean,
     color: Color,
     content: @Composable () -> Unit
 ) {
@@ -94,6 +109,8 @@ fun OutlinedTextFieldBackground(
         )
         // OutlineTextField will be the content...
         content()
+        Divider( color = if(isError) Color.Red else Color.Black, thickness = 1.dp,
+            modifier = Modifier.align(Alignment.BottomCenter))
     }
 }
 

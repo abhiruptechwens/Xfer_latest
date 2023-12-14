@@ -2,7 +2,9 @@ package com.ledgergreen.terminal.ui.pin
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ledgergreen.terminal.data.TransactionCache
 import com.ledgergreen.terminal.data.brand.BrandManager
+import com.ledgergreen.terminal.data.local.SessionManager
 import com.ledgergreen.terminal.data.model.Pin
 import com.ledgergreen.terminal.domain.GetVersionInfoUseCase
 import com.ledgergreen.terminal.domain.pin.EnterPinUseCase
@@ -11,7 +13,9 @@ import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -19,6 +23,9 @@ import timber.log.Timber
 class PinViewModel @Inject constructor(
     private val enterPin: EnterPinUseCase,
     getVersionInfo: GetVersionInfoUseCase,
+    private val transactionCache: TransactionCache,
+    sessionManager: SessionManager,
+
     brandManager: BrandManager,
 ) : ViewModel() {
 
@@ -31,6 +38,12 @@ class PinViewModel @Inject constructor(
             error = null,
             success = false,
             onErrorShown = this::onErrorShown,
+//            terminal = transactionCache.loginResponse.value?.terminal,
+            terminal = null,
+            companyId = null,
+//            terminal = null,
+//            storeName = transactionCache.loginResponse.value?.name
+//            companyId = transactionCache.loginResponse.value?.companyId
         ),
     )
 
@@ -38,14 +51,27 @@ class PinViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            brandManager.getBrand()
-                .filterNotNull()
-                .collect {
-                    _state.value = state.value.copy(
-                        vendorName = it.vendorName,
-                    )
-                }
+//
+            sessionManager.getLoginResponse().filterNotNull().collect{
+                _state.value = state.value.copy(
+                    terminal = it.terminal,
+                    companyId = it.companyId
+                )
+            }
+
         }
+
+//        viewModelScope.launch {
+//
+//            brandManager.getBrand()
+//                .filterNotNull()
+//                .collect {
+//                    _state.value = state.value.copy(
+//                        vendorName = it.vendorName,
+//                    )
+//                }
+//
+//        }
     }
 
     fun onPinChanged(pinCode: String, finish: Boolean) {

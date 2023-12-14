@@ -206,6 +206,12 @@ fun TerminalNavGraph(
                 navigateToCardDetails = {amount,cardToken ->
                     navController.navigate("${NavRoute.CardDetails.value}/$amount/$cardToken")
                 },
+                navigateToHome = {
+                    navController.navigate(NavRoute.HomeScreen.value) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                },
+
             )
         }
 

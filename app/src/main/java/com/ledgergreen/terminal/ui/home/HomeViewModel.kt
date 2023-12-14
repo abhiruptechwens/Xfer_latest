@@ -1,6 +1,7 @@
 package com.ledgergreen.terminal.ui.home
 
 import android.content.Intent
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -62,6 +63,7 @@ class HomeViewModel @Inject constructor(
             onErrorShown = ::onErrorShown,
             navigateNext = false,
             isDialogShown = false,
+            scanError = AppState1.dlError,
         ),
     )
 
@@ -78,7 +80,6 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onDocScan() {
-
 
 
         scanJob?.takeIf { it.isActive }?.cancel()
@@ -98,7 +99,15 @@ class HomeViewModel @Inject constructor(
                 }
 
 
+//                try {
+//                    scanner.scan()
+//                }catch (e: Exception){
+//                    _state.update {
+//                        error(e.message?:"Error Scanning")
+//                    }
+//                }
                 scanner.scan()
+
             }.fold(
                 onSuccess = { document ->
                     _state.update {
@@ -107,25 +116,38 @@ class HomeViewModel @Inject constructor(
                     document?.let { onScanned(it) }
                 },
                 onFailure = { exception ->
-                    _state.update { it.copy(scannerStarted = false) }
+
+                    Log.i("Error", "onDocScan: ${exception.message}")
+                    _state.update { it.copy(scannerStarted = false, scanError = AppState1.dlError) }
                     if (exception !is CancellationException) {
                         Timber.w(exception, "DocScan exception")
                         _state.update {
                             it.copy(
                                 errorMessage = exception.message
                                     ?: stringResources.getString(R.string.error_scanning),
-                                loading = false
+                                loading = false,
+//                                isDialogShown = if (state.value.isDialogShown) true else false,
+                                isDialogShown = if (exception.message != null) {
+                                    if (exception.message!!.contains("Scan Error") || exception.message!!.contains(
+                                            "Scanner error",
+                                        )
+                                    ) false
+                                    else true
+                                } else true,
                             )
+
                         }
+
                     }
                 },
             )
         }
+
     }
 
     fun onErrorShown() {
         _state.update {
-            it.copy(errorMessage = null)
+            it.copy(errorMessage = null, isDialogShown = false)
         }
     }
 
@@ -157,7 +179,6 @@ class HomeViewModel @Inject constructor(
                                 customerResponse = findCustomerResult.customerResponse,
                                 registrationRequired = false,
                                 loading = false,
-                                isDialogShown = true,
                                 errorMessage = null,
                             )
                         }
@@ -169,7 +190,7 @@ class HomeViewModel @Inject constructor(
                         val docuDate = LocalDate.parse(document.expiryDate.toString())
                         val currentDate = LocalDate.now()
                         saveScannedDocument(document)
-                        if(docuDate.isAfter(currentDate)) {
+                        if (docuDate.isAfter(currentDate)) {
                             _state.update {
                                 it.copy(
                                     customerResponse = null,
@@ -179,14 +200,13 @@ class HomeViewModel @Inject constructor(
                                     errorMessage = null,
                                 )
                             }
-                        }
-                        else{
+                        } else {
                             _state.update {
                                 it.copy(
                                     customerResponse = null,
                                     registrationRequired = false,
                                     loading = false,
-                                    isDialogShown = false,
+                                    isDialogShown = true,
                                     errorMessage = "Date has expired!",
                                 )
                             }
@@ -199,8 +219,8 @@ class HomeViewModel @Inject constructor(
                     it.copy(
                         errorMessage = exception.displayableErrorMessage(stringResources),
                         walletResponse = null,
-                        isDialogShown = false,
-                        loading = false
+                        isDialogShown = true,
+                        loading = false,
                     )
                 }
             },
@@ -224,7 +244,7 @@ class HomeViewModel @Inject constructor(
 
     fun onConfirmCustomer() {
         state.value.customerResponse?.let {
-                confirmCustomerAndProceed(it)
+            confirmCustomerAndProceed(it)
 
         } ?: error("Unable to confirm customer. customerResponse is null")
 
@@ -249,6 +269,15 @@ class HomeViewModel @Inject constructor(
         }
         scanJob?.cancel(CancellationException("Scanner canceled"))
     }
+
+    fun onCloseDialog(){
+        _state.update {
+            it.copy(
+                customerResponse = null,
+            )
+        }
+    }
+
 
     fun onNavigateRegisterConsumed() {
         _state.update {

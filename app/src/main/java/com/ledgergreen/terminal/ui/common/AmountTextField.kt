@@ -1,5 +1,6 @@
 package com.ledgergreen.terminal.ui.common
 
+import android.util.Log
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.LocalTextStyle
@@ -35,16 +36,18 @@ fun AmountTextField(
         LocalTextInputService provides null
     ) {
         BasicTextField(
-            modifier = modifier.bottomBorder(1.dp, MaterialTheme.colors.onBackground),
+            modifier = modifier.bottomBorder(1.dp, Color.Black),
             value = value,
             singleLine = true,
             onValueChange = {
-                val result = if (it.startsWith("0")) {
-                    ""
-                } else {
-                    it
-                }
-                onValueChange(result)
+//                val result = if (it.startsWith("0")) {
+//                    ""
+//                } else if (it.toLong() > 200000){
+//                    ""
+//                } else {
+//                    it
+//                }
+//                onValueChange(result.replace(",",""))
             },
             readOnly = true,
             visualTransformation = CurrencyAmountInputVisualTransformation(
@@ -57,7 +60,7 @@ fun AmountTextField(
             textStyle = LocalTextStyle.current.copy(
                 textAlign = TextAlign.Left,
                 fontSize = 24.sp,
-                color = Color.White,
+                color = Color.Black,
             ),
 //        textAlign = TextAlign.Left,
 //        color = Color.White,

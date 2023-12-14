@@ -1,11 +1,14 @@
 package com.ledgergreen.terminal.ui.card.reader
 
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -13,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -38,6 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
@@ -64,6 +69,9 @@ import com.ledgergreen.terminal.ui.common.BottomNextButton
 import com.ledgergreen.terminal.ui.common.ErrorDialog
 import com.ledgergreen.terminal.ui.common.NexgoN6Preview
 import com.ledgergreen.terminal.ui.common.toVisibility
+import com.ledgergreen.terminal.ui.common.topbar.DefaultAppBarConfig
+import com.ledgergreen.terminal.ui.common.topbar.SwitchAppBar
+import com.ledgergreen.terminal.ui.common.topbar.defaultAppBarConfig
 import com.ledgergreen.terminal.ui.theme.LedgerGreenTheme
 
 @Composable
@@ -71,6 +79,7 @@ fun CardReaderScreen(
     amount: String?,
     navigateToCardDetails: (amount: String, cardToken: String) -> Unit,
     modifier: Modifier = Modifier,
+    navigateToHome: () -> Unit,
     viewModel: CardReaderViewModel = hiltViewModel(),
 ) {
     var state = viewModel.state.collectAsState().value
@@ -96,14 +105,19 @@ fun CardReaderScreen(
         },
         onNavigateNext = { amount?.let { navigateToCardDetails(it, "0") } },
         modifier = modifier,
+        appBarConfig = defaultAppBarConfig(),
         dialogClose = {
             viewModel.onDialogClosed()
-        }
+        },
+        navigateToHome = {
+            navigateToHome()
+        },
     )
 }
 
 @Composable
 fun CardReaderScreen(
+    navigateToHome: () -> Unit,
     state: CardReaderState,
     dialogClose : () -> Unit,
     onStart: () -> Unit,
@@ -113,6 +127,7 @@ fun CardReaderScreen(
     onDeleteClicked: (cardToken: String?, index: Int) -> Unit,
     onNavigateNext: () -> Unit,
     modifier: Modifier = Modifier,
+    appBarConfig: DefaultAppBarConfig,
 ) {
     val currentOnStart by rememberUpdatedState(onStart)
     val currentOnStop by rememberUpdatedState(onStop)
@@ -152,7 +167,7 @@ fun CardReaderScreen(
         }
     }
 
-    val defaultBackgroundColor = Color(0xFF06478D)
+    val defaultBackgroundColor = Color.White
     val errorBackgroundColor = MaterialTheme.colors.error
 
     val color = remember { Animatable(defaultBackgroundColor) }
@@ -168,52 +183,68 @@ fun CardReaderScreen(
         }
     }
 
+    val context = LocalContext.current
+
     Scaffold(
         modifier = modifier,
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         backgroundColor = color.value,
+        topBar = { SwitchAppBar(appBarConfig, navigateToHome, {}) },
     ) {
 
-        if (state.success) {
-            CardDeleteDialog(dialogClose)
+        BackHandler {
+            Toast.makeText(context, "You cannot go back from this page", Toast.LENGTH_LONG)
+                .show()
         }
-        Column(
-            Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-                .padding(it),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Text(
-                modifier = Modifier.padding(bottom = 16.dp),
-                text = stringResource(R.string.insert_chip_tap_or_swipe_card),
-                color = Color.White,
 
-                )
+        Box {
             Image(
-                modifier = Modifier.width(220.dp),
-                painter = painterResource(id = R.drawable.card_scanner_hint),
-                contentDescription = "card scanner hint",
+                painter = painterResource(id = R.drawable.botton_lines),
+                contentDescription = null,
+                modifier = Modifier.align(Alignment.BottomStart)
             )
-            Spacer(Modifier.weight(1f))
 
-            Box {
-                CircularProgressIndicator(
-                    Modifier
-                        .align(Alignment.Center)
-                        .padding(bottom = 4.dp)
-                        .alpha(state.isLoading.toVisibility()),
-                )
-                if (!state.isLoading)
-                    cardItems(
-                        state = state,
-                        onSavedCardClicked = onSavedCardClicked,
-                        onDeleteClicked = onDeleteClicked,
-                    )
+            if (state.success) {
+                CardDeleteDialog(dialogClose)
             }
+            Column(
+                Modifier
+                    .fillMaxSize()
+                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+                    .padding(it),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Text(
+                    modifier = Modifier.padding(bottom = 16.dp),
+                    text = stringResource(R.string.insert_chip_tap_or_swipe_card),
+                    color = Color(0xFFFF0043A5),
+                    textAlign = TextAlign.Center
+
+                    )
+                Image(
+                    modifier = Modifier.width(180.dp),
+                    painter = painterResource(id = R.drawable.card_scanner_hint),
+                    contentDescription = "card scanner hint",
+                )
+                Spacer(Modifier.weight(1f))
+
+                Box {
+                    CircularProgressIndicator(
+                        Modifier
+                            .align(Alignment.Center)
+                            .padding(bottom = 4.dp)
+                            .alpha(state.isLoading.toVisibility()),
+                    )
+                    if (!state.isLoading)
+                        cardItems(
+                            state = state,
+                            onSavedCardClicked = onSavedCardClicked,
+                            onDeleteClicked = onDeleteClicked,
+                        )
+                }
 
 //            val context = LocalContext.current
-            // saved card ui
+                // saved card ui
 
 //            Row(
 //                // add new card button
@@ -250,10 +281,11 @@ fun CardReaderScreen(
 //
 //            }
 
-            BottomNextButton(
-                text = stringResource(R.string.enter_manually),
-                onClick = onEnterManually,
-            )
+                BottomNextButton(
+                    text = stringResource(R.string.enter_manually),
+                    onClick = onEnterManually,
+                )
+            }
         }
     }
 }
@@ -276,23 +308,41 @@ fun cardItems(
                 Column(
                     modifier = Modifier
                         .padding(start = 15.dp)
-                        .height(64.dp)
+                        .width(100.dp)
+                        .height(70.dp)
                         .background(
-                            color = Color(0xFFF2F5F8),
+                            color = Color(0xFFFF0043A5),
                             shape = RoundedCornerShape(size = 5.dp),
                         )
-                        .padding(start = 15.dp)
-                        .clickable {
-//                            Toast
-//                                .makeText(
-//                                    context,
-//                                    "${state.savedCards?.get(index)?.external_id}",
-//                                    Toast.LENGTH_SHORT,
-//                                )
-//                                .show()
-                            onSavedCardClicked(state.savedCards?.get(filter)?.external_id)
-                            AppState1.savedCardDetails = state.savedCards?.get(filter)
-                        },
+                        .border(1.dp,Color.Black,
+                            RoundedCornerShape(5.dp))
+                        .padding(5.dp)
+//                        .padding(start = 15.dp)
+                        .pointerInput(Unit){
+                            detectTapGestures(
+                                onTap = {
+                                    onSavedCardClicked(state.savedCards?.get(filter)?.external_id)
+                                    AppState1.savedCardDetails = state.savedCards?.get(filter)
+                                },
+                                onLongPress = {
+                                    onDeleteClicked(
+                                        state.savedCards?.get(filter)?.external_id,
+                                        filter,
+                                    )
+                                }
+                            )
+                        }
+//                        .clickable {
+////                            Toast
+////                                .makeText(
+////                                    context,
+////                                    "${state.savedCards?.get(index)?.external_id}",
+////                                    Toast.LENGTH_SHORT,
+////                                )
+////                                .show()
+//                            onSavedCardClicked(state.savedCards?.get(filter)?.external_id)
+//                            AppState1.savedCardDetails = state.savedCards?.get(filter)
+//                        },
 
                     ) {
 
@@ -303,26 +353,29 @@ fun cardItems(
                             .build(),
                     )
 
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        Icon(
-                            modifier = Modifier
-                                .align(Alignment.TopEnd)
-                                .clickable {
-                                    onDeleteClicked(
-                                        state.savedCards?.get(filter)?.external_id,
-                                        filter,
-                                    )
-                                },
-                            painter = painterResource(id = R.drawable.close),
-                            contentDescription = null,
-                        )
+                    Box(modifier = Modifier
+                        .fillMaxSize().align(Alignment.CenterHorizontally)) {
+//                        Icon(
+//                            modifier = Modifier
+//                                .align(Alignment.TopEnd)
+//                                .clickable {
+//                                    onDeleteClicked(
+//                                        state.savedCards?.get(filter)?.external_id,
+//                                        filter,
+//                                    )
+//                                },
+//                            painter = painterResource(id = R.drawable.close),
+//                            contentDescription = null,
+//                        )
 
-                        Column(modifier = Modifier.fillMaxSize()) {
+                        Column(modifier = Modifier.fillMaxSize().align(Alignment.Center)) {
                             Image(
                                 modifier = Modifier
-                                    .width(70.dp)
-                                    .height(45.dp)
-                                    .padding(top = 15.dp, end = 25.dp),
+                                    .width(90.dp)
+                                    .height(40.dp)
+                                    .padding(start = 5.dp, top = 5.dp,end = 5.dp)
+                                    .background(Color.White, shape = RoundedCornerShape(2.dp))
+                                    .padding(5.dp),
                                 painter = painter
                                     ?: rememberVectorPainter(Icons.Default.CreditCard),
                                 //            painter = painterResource(id = R.drawable.card_visa),
@@ -330,12 +383,13 @@ fun cardItems(
                             )
 
                             Text(
+                                modifier = Modifier.padding(start = 5.dp, bottom = 5.dp),
                                 text = state.savedCards[filter].card_number,
                                 //            text = "**** 1234",
                                 style = TextStyle(
                                     fontSize = 14.sp,
                                     fontWeight = FontWeight(400),
-                                    color = Color(0xFF000000),
+                                    color = Color.White,
                                     textAlign = TextAlign.Center,
                                 ),
                             )
@@ -361,7 +415,6 @@ fun cardItem(
     Column(
         modifier = Modifier
             .padding(start = 15.dp)
-            .height(64.dp)
             .background(
                 color = Color(0xFFF2F5F8),
                 shape = RoundedCornerShape(size = 5.dp),
@@ -441,6 +494,7 @@ fun onCrossButtonClick(index: Int, state: CardReaderState) {
 fun CardScannerHintOverlayPreview() {
     LedgerGreenTheme {
         CardReaderScreen(
+            navigateToHome = { },
             CardReaderState(
                 cardReaderResult = null,
                 onMessageShown = { },
@@ -457,6 +511,17 @@ fun CardScannerHintOverlayPreview() {
             onStop = { },
             onEnterManually = { },
             onNavigateNext = { },
+            appBarConfig = DefaultAppBarConfig.preview,
         )
     }
 }
+
+val fakeSavedCards = Card(
+    cardNumber = "123456798955",
+    card_number = "****1234",
+    card_type = "Visa",
+    external_id = "12345676767676",
+    image = "R.drawable.card_diners",
+    is_primary = true
+
+)

@@ -24,7 +24,7 @@ interface IdleLocker {
 
     companion object {
 //        const val defaultIdleTimeMs = 70_000L
-        const val defaultIdleTimeMs = 2000_000L
+        const val defaultIdleTimeMs = 10000000L
         const val autolockDialogDurationMs = 10_000L
         const val countDownIntervalMs = 1_000L
     }

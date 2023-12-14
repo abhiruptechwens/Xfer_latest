@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -58,38 +59,51 @@ fun PaymentSuccessfulDialog(
     ) {
         Surface(modifier, shape = RoundedCornerShape(15.dp)) {
 
-            Column(modifier = Modifier.padding(16.dp)) {
-
-                var xferText = ""
-                if (from.equals("goods&service")){
-                    Image(painter = painterResource(id = R.drawable.xflogo),
-                        contentDescription = "xflogo",
+            Box {
+                if (from.equals("goods&service"))
+                    Image(
                         modifier = Modifier
-                            .padding(5.dp)
-                            .align(Alignment.CenterHorizontally)
-                            .size(250.dp))
-                    xferText = "Xfer has been delivered"
-                }
-                else if(from.equals("fromContactless"))
-                    xferText = "SMS sent Successfully"
-                else
-                    xferText = "Wallet Loaded Successfully"
+                            .padding(16.dp)
+                            .size(300.dp),
+                        painter = painterResource(id = R.drawable.payment_background),
+                        contentDescription = null,
+                    )
 
+                Column(modifier = Modifier
+                    .padding(16.dp)
+                    .align(Alignment.Center)) {
 
-
-                Text(
-                    modifier = Modifier
-                        .align(CenterHorizontally)
-                        .fillMaxWidth(),
-                    text = xferText,
-                    style = TextStyle(
-                        fontSize = 18.sp,
-                        lineHeight = 22.sp,
-                        fontWeight = FontWeight(600),
-                        color = Color(0xFF000000),
-                        textAlign = TextAlign.Center,
+                    var xferText = ""
+                    if (from.equals("goods&service")) {
+                        Image(
+                            painter = painterResource(id = R.drawable.xflogo),
+                            contentDescription = "xflogo",
+                            modifier = Modifier
+                                .align(Alignment.CenterHorizontally)
+                                .size(260.dp)
+                                .padding(5.dp)
                         )
-                )
+                        xferText = "Xfer has been delivered"
+                    } else if (from.equals("fromContactless"))
+                        xferText = "SMS sent Successfully"
+                    else
+                        xferText = "Wallet Loaded Successfully"
+
+
+
+                    Text(
+                        modifier = Modifier
+                            .align(CenterHorizontally)
+                            .fillMaxWidth(),
+                        text = xferText,
+                        style = TextStyle(
+                            fontSize = 18.sp,
+                            lineHeight = 22.sp,
+                            fontWeight = FontWeight(600),
+                            color = Color(0xFF000000),
+                            textAlign = TextAlign.Center,
+                        )
+                    )
 
 //                Text(
 //                    modifier =Modifier.align(CenterHorizontally).fillMaxWidth().padding(top=5.dp),
@@ -102,38 +116,46 @@ fun PaymentSuccessfulDialog(
 //                        textAlign = TextAlign.Center,
 //                    )
 //                )
-                var newAmt = ""
+                    var newAmt = ""
 
-                newAmt = if(amount.contains("$"))
-                    amount.drop(1)
-                else
-                    amount
+                    newAmt = if (amount.contains("$"))
+                        amount.drop(1)
+                    else
+                        amount
 
-                Text(
-                    modifier = Modifier
-                        .align(CenterHorizontally)
-                        .fillMaxWidth()
-                        .padding(top = 5.dp),
-                    text = "Amount : ${newAmt.toMoney()!!.toCurrencyString()}",
-                    style = TextStyle(
-                        fontSize = 18.sp,
-                        lineHeight = 20.sp,
-                        fontWeight = FontWeight(600),
-                        color = Color(0xFF000000),
-                        textAlign = TextAlign.Center,
-                    ),
-                )
-
-                Column() {
-                    Button(
+                    Text(
                         modifier = Modifier
+                            .align(CenterHorizontally)
                             .fillMaxWidth()
-                            .padding(10.dp),
-                        onClick = onPaymentDone,
-                        colors = ButtonDefaults.buttonColors(Color(0xFF0068FF)),
-                        shape = RoundedCornerShape(5.dp),
-                        content = { Text("Back to Home",color = Color.White, style = MaterialTheme.typography.h6) },
+                            .padding(top = 5.dp),
+                        text = "Amount : ${newAmt.toMoney()!!.toCurrencyString()}",
+                        style = TextStyle(
+                            fontSize = 18.sp,
+                            lineHeight = 20.sp,
+                            fontWeight = FontWeight(600),
+                            color = Color(0xFF000000),
+                            textAlign = TextAlign.Center,
+                        ),
                     )
+
+                    Column() {
+                        Button(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(100.dp)
+                                .padding(top = 20.dp, start = 10.dp, end = 10.dp, bottom = 10.dp),
+                            onClick = onPaymentDone,
+                            colors = ButtonDefaults.buttonColors(Color(0xFF0068FF)),
+                            shape = RoundedCornerShape(5.dp),
+                            content = {
+                                Text(
+                                    "Back to Home",
+                                    color = Color.White,
+                                    style = MaterialTheme.typography.h6
+                                )
+                            },
+                        )
+                    }
                 }
             }
 

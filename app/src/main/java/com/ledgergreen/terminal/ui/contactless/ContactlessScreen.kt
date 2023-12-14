@@ -81,7 +81,9 @@ import com.ledgergreen.terminal.ui.agreement.addDotAfterLastTwoDigits
 import com.ledgergreen.terminal.ui.common.BottomNextButton
 import com.ledgergreen.terminal.ui.common.ErrorDialog
 import com.ledgergreen.terminal.ui.common.NexgoN6Preview
+import com.ledgergreen.terminal.ui.common.PhoneNumberTextFieldWithLeadingIcon
 import com.ledgergreen.terminal.ui.common.PhoneTextField
+import com.ledgergreen.terminal.ui.common.TextFieldWithUnderlineAndTrailingIcon
 import com.ledgergreen.terminal.ui.common.topbar.DefaultAppBarConfig
 import com.ledgergreen.terminal.ui.common.topbar.SwitchAppBar
 import com.ledgergreen.terminal.ui.common.topbar.defaultAppBarConfig
@@ -125,6 +127,10 @@ fun ContactlessScreen(
             navigateToHome()
 //            navigateToRecentTransactions()
         },
+
+        onNavigateToHome = {
+            navigateToHome()
+        },
         navigateToHome = {
 //            viewModel.onNavigateConsumed()
             if (state.contactlessPayment?.smsSent == true) {
@@ -138,7 +144,8 @@ fun ContactlessScreen(
 
 @Composable
 fun ContactlessScreen(
-    navigateToHome : () ->Unit,
+    onNavigateToHome:()-> Unit,
+    navigateToHome: () -> Unit,
     state: ContactlessState,
     onPhoneChanged: (String) -> Unit,
     onCountryCodeChanged: (CountryPhoneCode) -> Unit,
@@ -153,13 +160,13 @@ fun ContactlessScreen(
         ErrorDialog(state.error, state.onErrorShown)
     }
 
-    if (state.contactlessPayment?.smsSent == true){
-            PaymentSuccessfulDialog(
-                from = "fromContactless",
-                amount = state.amount.toCurrencyString(),
-                onPaymentDone = { navigateToHome() },
-                onReject = { true },
-            )
+    if (state.contactlessPayment?.smsSent == true) {
+        PaymentSuccessfulDialog(
+            from = "fromContactless",
+            amount = state.amount.toCurrencyString(),
+            onPaymentDone = { navigateToHome() },
+            onReject = { true },
+        )
 //            navigateToRecentTransactions()
     }
 
@@ -174,36 +181,47 @@ fun ContactlessScreen(
 
     Scaffold(
         modifier = Modifier,
-        backgroundColor = Color(0xFF06478D),
-        topBar = { SwitchAppBar(appBarConfig, navigateToHome) },
+        backgroundColor = Color.White,
+        topBar = {
+            SwitchAppBar(appBarConfig, onNavigateToHome, {})
+        },
     ) { paddingValues ->
 
-        Column {
+        Box {
+
+            Image(
+                painter = painterResource(id = R.drawable.botton_lines),
+                contentDescription = null,
+                modifier = Modifier.align(Alignment.BottomStart)
+            )
 
 
-            Card(
-                modifier = Modifier.padding(start = 15.dp, end = 15.dp),
-                backgroundColor = Color(0xFF1B53A6),
-            ) {
+            Column {
+
+
                 Column(
                     modifier = Modifier
                         .padding(paddingValues)
-                        .padding(16.dp)
+                        .padding(start = 16.dp, end = 16.dp, top = 5.dp)
                         .verticalScroll(rememberScrollState()),
                 ) {
 
-                    CustomerNameTextField(
+                    CustomerNameTextField (
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 10.dp),
+                        name = state.customerName,
+                        label = "Enter Name",
+                        fontSize = 18,
+                        icon = R.drawable.person_icon_light,
+                        onValueChange = onCustomerNameChange,
+                    )
+                    PhoneNumberTextFieldWithLeadingIcon(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 16.dp),
-                        name = state.customerName,
-                        onValueChange = onCustomerNameChange,
-                    )
-                    PhoneTextField(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 8.dp),
                         phoneNumber = state.phoneNumber,
+                        label = "Phone Number",
                         onPhoneChanged = onPhoneChanged,
                         onCountryChanged = onCountryCodeChanged,
                         keyboardOptions = KeyboardOptions(
@@ -211,6 +229,18 @@ fun ContactlessScreen(
                             imeAction = ImeAction.Done,
                         ),
                     )
+
+                    CustomerNameTextField (
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 16.dp),
+                        name = state.amount.toCurrencyString(),
+                        label = "Amount",
+                        fontSize = 18,
+                        icon = R.drawable.money_icon,
+                        onValueChange = onCustomerNameChange,
+                    )
+
 //                    ReadOnlyAmountTextField(
 //                        modifier = Modifier
 //                            .fillMaxWidth()
@@ -218,39 +248,44 @@ fun ContactlessScreen(
 //                        amount = state.amount.toCurrencyString(),
 //                    )
 
-                    Column {
-
-                        Text(text = "Amount",modifier.padding(start = 16.dp, top = 5.dp), fontSize = 13.sp, color = Color.White)
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .border(
-                                    0.8.dp,
-                                    Color.Black,
-                                    RoundedCornerShape(5.dp),
-                                )
-                                .height(50.dp)
-                                .padding(5.dp),
-                        ) {
-
-
-                            Text(
-                                text = state.amount.toCurrencyString(),
-                                fontSize = 24.sp,
-                                color = Color.White,
-                                modifier = Modifier
-                                    .padding(start = 15.dp)
-                                    .align(Alignment.CenterStart),
-                            )
-                        }
-
-                    }
+//                    Column {
+//
+//                        Text(
+//                            text = "Amount",
+//                            modifier.padding(start = 16.dp, top = 5.dp),
+//                            fontSize = 13.sp,
+//                            color = Color.Black,
+//                        )
+//                        Box(
+//                            modifier = Modifier
+//                                .fillMaxWidth()
+//                                .border(
+//                                    0.8.dp,
+//                                    Color.Black,
+//                                    RoundedCornerShape(5.dp),
+//                                )
+//                                .height(50.dp)
+//                                .padding(5.dp),
+//                        ) {
+//
+//
+//                            Text(
+//                                text = state.amount.toCurrencyString(),
+//                                fontSize = 24.sp,
+//                                color = Color.Black,
+//                                modifier = Modifier
+//                                    .padding(start = 15.dp)
+//                                    .align(Alignment.CenterStart),
+//                            )
+//                        }
+//
+//                    }
 
                     BottomNextButton(
                         text = "Send Sms",
                         onClick = onSendSms,
                         enabled = state.formValid && !state.loading,
-                        modifier = Modifier.padding(top = 5.dp),
+                        modifier = Modifier.padding(top = 15.dp),
                     )
 
                     Text(
@@ -261,7 +296,7 @@ fun ContactlessScreen(
                         style = TextStyle(
                             fontSize = 14.sp,
                             fontWeight = FontWeight(600),
-                            color = Color(0xFFFFFFFF),
+                            color = Color.Black,
 
                             ),
                     )
@@ -282,25 +317,24 @@ fun ContactlessScreen(
                     }
                 }
 
+                Spacer(modifier = Modifier.weight(1f))
+
+                Text(
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(bottom = 10.dp),
+                    text = stringResource(R.string.xfer_powered_by_west_town_bank_trust),
+                    style = TextStyle(
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight(400),
+                        color = Color(0xFFFFFFFF),
+
+                        textAlign = TextAlign.Center,
+                        textDecoration = TextDecoration.Underline,
+                    ),
+                )
+
             }
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            Text(
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(bottom = 10.dp),
-                text = stringResource(R.string.xfer_powered_by_west_town_bank_trust),
-                style = TextStyle(
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight(400),
-                    color = Color(0xFFFFFFFF),
-
-                    textAlign = TextAlign.Center,
-                    textDecoration = TextDecoration.Underline,
-                ),
-            )
-
         }
 
     }
@@ -327,8 +361,7 @@ fun ContactlessPaymentSuccessDialog(
             ) {
                 Column(modifier = Modifier.padding(24.dp)) {
                     Row(
-                        modifier = Modifier
-                            .align(Alignment.CenterHorizontally),
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Icon(
@@ -342,7 +375,7 @@ fun ContactlessPaymentSuccessDialog(
                             style = MaterialTheme.typography.h6.copy(
                                 fontSize = 24.sp,
                             ),
-                            color = Color(0xFF053170)
+                            color = Color(0xFF053170),
                         )
                     }
                     Column(
@@ -371,7 +404,7 @@ fun ContactlessPaymentSuccessDialog(
                         onClick = onDismiss,
                         modifier = Modifier.padding(top = 15.dp),
 
-                    )
+                        )
                 }
             }
         },
@@ -381,28 +414,54 @@ fun ContactlessPaymentSuccessDialog(
 @Composable
 fun CustomerNameTextField(
     name: String,
+    label:String,
+    fontSize:Int,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
+    icon:Int,
 ) {
 
-    val colors = TextFieldDefaults.outlinedTextFieldColors(
-        focusedBorderColor = Color.White, // Set the focused outline color
-        unfocusedBorderColor = Color.Black, // Set the unfocused outline color
-        cursorColor = Color.White,
-        textColor = Color.White// Set the cursor color
-    )
-    OutlinedTextField(
+//    val colors = TextFieldDefaults.outlinedTextFieldColors(
+//        focusedBorderColor = Color.Black, // Set the focused outline color
+//        unfocusedBorderColor = Color.Black, // Set the unfocused outline color
+//        cursorColor = Color.Black,
+//        textColor = Color.Black,// Set the cursor color
+//    )
+//    OutlinedTextField(
+//        modifier = modifier,
+//        value = name,
+//        onValueChange = onValueChange,
+//        label = { Text(stringResource(R.string.enter_name), color = Color.Black) },
+//        singleLine = true,
+//        keyboardOptions = KeyboardOptions(
+//            imeAction = ImeAction.Next,
+//            capitalization = KeyboardCapitalization.Words,
+//            autoCorrect = false,
+//        ),
+//        colors = colors,
+//    )
+
+    Text(
         modifier = modifier,
+        text = label,
+        style = TextStyle(
+            fontSize = 18.sp,
+            color = Color.Black,
+        ),
+    )
+
+    TextFieldWithUnderlineAndTrailingIcon(
         value = name,
         onValueChange = onValueChange,
-        label = { Text(stringResource(R.string.enter_full_name),color = Color(0xFFFFFFFF))},
-        singleLine = true,
+        label = "Name",
         keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Ascii,
             imeAction = ImeAction.Next,
-            capitalization = KeyboardCapitalization.Words,
             autoCorrect = false,
         ),
-        colors = colors,
+        fontSize = fontSize,
+        iconResId = icon,
+        modifier = Modifier.padding(top = 8.dp)
     )
 }
 
@@ -434,6 +493,7 @@ fun ContactlessScreenPreview() {
             onGenerateQrCode = { },
             onFinish = { },
             appBarConfig = DefaultAppBarConfig.preview,
+            onNavigateToHome = {},
         )
     }
 }

@@ -4,7 +4,6 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ledgergreen.terminal.app.AppState1
-import com.ledgergreen.terminal.app.AppState1.savedCards
 import com.ledgergreen.terminal.data.TransactionCache
 import com.ledgergreen.terminal.idle.IdleLocker
 import com.ledgergreen.terminal.monitoring.Actions

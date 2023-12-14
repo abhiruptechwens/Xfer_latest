@@ -1,16 +1,13 @@
 package com.ledgergreen.terminal.ui.pin
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
@@ -19,16 +16,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.ledgergreen.terminal.R
-import com.ledgergreen.terminal.ui.common.AppIcon
+import com.ledgergreen.terminal.data.network.model.Terminal
 import com.ledgergreen.terminal.ui.common.ErrorDialog
 import com.ledgergreen.terminal.ui.common.NexgoN6Preview
 import com.ledgergreen.terminal.ui.common.PinPad
@@ -70,7 +63,7 @@ fun PinScreen(
 
     Scaffold(
         modifier = modifier,
-        backgroundColor = Color(0xFF06478D),
+        backgroundColor = Color.White,
         topBar = {
             PinAppBar(
                 logoUrl = appBarConfig.logoUrl,
@@ -85,6 +78,29 @@ fun PinScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
 
+            if (state.companyId == 132.toLong()) {
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.Start)
+                        .padding(start = 16.dp),
+//                    horizontalAlignment = Alignment.Start,
+                ) {
+                    Text(
+                        color = Color.Black,
+                        text = "Terminal:",
+                        fontSize = 12.sp,
+                    )
+                    Text(
+                        color = Color.Black,
+                        modifier = Modifier.padding(start = 8.dp),
+//                        text = state.terminal!!.name,
+                        text = state.terminal!!.name,
+                        fontSize = 12.sp,
+                    )
+                }
+            }
+
 
 //            Image(
 //                modifier = modifier.padding(top = 50.dp).size(100.dp),
@@ -96,12 +112,12 @@ fun PinScreen(
 //                color = Color.White,
 //                modifier = Modifier.padding(top = 5.dp),
 //            )
-            Spacer(Modifier.weight(5f))
+            Spacer(Modifier.weight(2f))
 
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 32.dp),
+                    .padding(top = 10.dp),
                 contentAlignment = Alignment.Center,
             ) {
                 PinCodeTextField(
@@ -136,7 +152,7 @@ fun PinScreen(
             Text(
                 modifier = Modifier.padding(bottom = 8.dp),
                 text = state.appInfo,
-                color = Color.White,
+                color = Color.Black,
                 style = MaterialTheme.typography.caption.copy(
                     color = MaterialTheme.colors.onBackground,
                 ),
@@ -158,6 +174,13 @@ fun PinCodeScreenPreview() {
                 error = null,
                 success = false,
                 onErrorShown = {},
+                terminal = Terminal(
+                    terminalId = "R123",
+                    id = 123,
+                    name = "r1",
+                    slug = "Something"
+                    ),
+                companyId = 1,
             ),
             onPinChange = { _, _ -> },
             appBarConfig = DefaultAppBarConfig.preview,

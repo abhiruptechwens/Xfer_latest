@@ -3,9 +3,9 @@ package com.ledgergreen.terminal.data.network.model
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Page<T>(
+data class Page(
     val totalItems: Int,
-    val records: List<T>,
+    val records: List<Transaction>,
     val totalPages: Int,
     val currentPage: Int,
     val page: Int,

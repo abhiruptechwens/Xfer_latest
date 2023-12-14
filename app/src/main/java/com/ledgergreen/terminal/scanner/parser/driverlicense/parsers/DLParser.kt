@@ -1,9 +1,12 @@
 package com.ledgergreen.terminal.scanner.parser.driverlicense.parsers
 
+import android.util.Log
+import com.ledgergreen.terminal.scanner.parser.driverlicense.DriverLicenseParserException
 import com.ledgergreen.terminal.scanner.parser.driverlicense.categories.Gender
 import com.ledgergreen.terminal.scanner.parser.driverlicense.categories.IssuingCountry
 import com.ledgergreen.terminal.scanner.parser.driverlicense.models.FieldKey
 import com.ledgergreen.terminal.scanner.parser.driverlicense.models.License
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -107,8 +110,21 @@ open class DLParser(val data: String) {
 
     internal open fun parseDate(key: FieldKey): Date? {
         val dateString = parseString(key)
-        if (dateString.isNullOrEmpty()) return null else if (dateString == "SIM") return SimpleDateFormat(dateFormat, Locale.US).parse("02052029")
-        return SimpleDateFormat(dateFormat, Locale.US).parse(dateString)
+
+        try {
+            if (dateString.isNullOrEmpty()) {
+//            parseError("Dl error! $key not found")
+                return null
+            } else if (dateString == "SIM") return SimpleDateFormat(
+                dateFormat,
+                Locale.US,
+            ).parse("02052029")
+            val determineDateFormat = determineDateFormat(dateString)
+
+            return SimpleDateFormat(determineDateFormat, Locale.US).parse(dateString)
+        } catch (e:Exception){
+            return null
+        }
     }
 
     protected open val parsedFirstName
@@ -158,11 +174,37 @@ open class DLParser(val data: String) {
      */
     protected open val parsedPostalCode: String?
         get() {
-            val rawCode = parseString(FieldKey.POSTAL_CODE)
-            val firstPart = rawCode?.substring(0, 5) ?: return null
-            val secondPart = rawCode.substring(5)
 
-            secondPart.takeIf { it != "0000" }?.let { return firstPart.plus("-").plus(it) }
-                ?: return firstPart
+            val rawCode = parseString(FieldKey.POSTAL_CODE)
+            if (rawCode != null && rawCode != "" && rawCode.length > 4) {
+                val firstPart = rawCode.substring(0, 5) ?: return null
+                val secondPart = rawCode.substring(5)
+//            return rawCode
+                secondPart.takeIf { it != "0000" }?.let { return firstPart.plus("-").plus(it) }
+                    ?: return firstPart
+            } else
+                return rawCode
         }
+
+
+    fun determineDateFormat(dateString: String): String? {
+        val formats = listOf("MMddyyyy", "yyyyMMdd", "ddMMyyyy", "yyyy-MM-dd")
+
+        for (format in formats) {
+            val sdf = SimpleDateFormat(format)
+            sdf.isLenient = false
+
+            try {
+                val date: Date = sdf.parse(dateString)
+                // If parsing is successful, return the format
+                if (date!=null)
+                    return format
+            } catch (e: ParseException) {
+                // Parsing failed for this format, continue to the next one
+            }
+        }
+
+        // If none of the formats match
+        return null
+    }
 }

@@ -2,6 +2,7 @@ package com.ledgergreen.terminal.data.network.model
 
 import com.ledgergreen.terminal.data.model.Money
 import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -15,6 +16,9 @@ enum class TransactionStatus {
 
     @SerialName("PENDING")
     Pending,
+
+    @SerialName("FAILED")
+    Failed,
 }
 
 @Serializable
@@ -29,7 +33,7 @@ data class ContactlessListRequest(
 //    val to: Instant,
     val page: Int,
     val size: Int,
-    val s: ContactlessListSearch?,
+    val s: String?,
     val status: String,
 )
 
@@ -42,6 +46,7 @@ data class Transaction(
     val status: TransactionStatus,
     val associate: String,
     val associateId: Int,
+    val date: String,
     @SerialName("last4")
     val cardNumber: String?,
 )

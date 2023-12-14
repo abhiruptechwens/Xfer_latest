@@ -37,6 +37,8 @@ data class StoreDetails(
     val slug: String,
     @SerialName("account_number")
     val accountNumber: String,
+    @SerialName("show_tip_amount")
+    val showTipAmount: Boolean,
 )
 
 @Serializable

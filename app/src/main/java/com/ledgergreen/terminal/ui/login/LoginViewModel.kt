@@ -2,6 +2,7 @@ package com.ledgergreen.terminal.ui.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ledgergreen.terminal.data.TransactionCache
 import com.ledgergreen.terminal.domain.LoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,6 +13,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
+    private val transactionCache: TransactionCache,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(

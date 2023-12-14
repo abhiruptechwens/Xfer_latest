@@ -63,7 +63,7 @@ class FindCustomerByDocumentUseCase @Inject constructor(
 
             var errorMessage: String = ""
             if(it.message!!.contains("You are not allowed to use this system.")){
-                errorMessage = "You are Banned"
+                errorMessage = "Account Restricted!\nPlease contact Xfer support at 833-206-5989."
             }
             else{
 //                val regex = Regex("\\{(.+?)\\}")
@@ -118,7 +118,7 @@ class FindCustomerByDocumentUseCase @Inject constructor(
             idNumber = documentNumber,
             idType = CustomerIdType.DriverLicense,
             address1 = address1,
-            birthdate = birthDate.toApiLocalDateString(),
+            birthdate = birthDate?.toApiLocalDateString(),
             city = city,
             state = state,
             country = country,

@@ -20,13 +20,18 @@ class ScannerImpl @Inject constructor(
     override fun start(callback: ScannerCallback) {
         Timber.d("NexgoScanner start scanner")
         deviceEngineProvider.scanner.stopScan()
+//        deviceEngineProvider.scanner2.stop()
 
         val cfgEntity = ScannerCfgEntity().apply {
             isAutoFocus = true
             isUsedFrontCcd = false
             isBulkMode = false
             interval = 500
-            symbolEnumList = listOf(SymbolEnum.PDF417)
+            symbolEnumList = listOf(
+                SymbolEnum.PDF417,
+                SymbolEnum.OCR,
+                SymbolEnum.QR
+            )
             customBundle = bundleOf(
                 "hideFrame" to true,
             )
@@ -38,6 +43,7 @@ class ScannerImpl @Inject constructor(
                     SdkResult.Success -> {
                         Timber.d("Scanner Init Success")
                         deviceEngineProvider.scanner.startScan(Scanner.scannerTimeoutSec, this)
+//                        deviceEngineProvider.scanner.startScan(Scanner.scannerTimeoutSec, this)
                     }
 
                     else -> {

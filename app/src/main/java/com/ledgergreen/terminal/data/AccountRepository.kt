@@ -28,6 +28,7 @@ interface AccountRepository {
 class AccountRepositoryImpl @Inject constructor(
     private val apiService: ApiService,
     private val sessionManager: SessionManager,
+    private val transactionCache: TransactionCache,
 ) : AccountRepository {
 
     override suspend fun login(login: String, password: String) = withContext(Dispatchers.IO) {
@@ -35,6 +36,7 @@ class AccountRepositoryImpl @Inject constructor(
         if (baseLoginResponse.status) {
             val loginResponse = baseLoginResponse.response!!
             sessionManager.saveLoginResponse(loginResponse)
+            transactionCache.setLoginResponse(loginResponse)
             Timber.d("Login success")
         } else {
             throw RequestException(baseLoginResponse.message)
@@ -43,6 +45,7 @@ class AccountRepositoryImpl @Inject constructor(
 
     override suspend fun logout() {
         sessionManager.removeLogin()
+        transactionCache.clearLogin()
     }
 
     override fun getToken(): String? = runBlocking {
