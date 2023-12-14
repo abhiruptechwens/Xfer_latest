@@ -43,6 +43,9 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -118,6 +121,7 @@ fun RecentTransactionsScreen(
 
 var loadMore = 1
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun RecentTransactionsScreen(
     navigateToHome: () -> Unit,
@@ -328,11 +332,19 @@ fun RecentTransactionsScreen(
 //                modifier = Modifier.padding(top = 4.dp),
 //            )
 
+                val pullRefreshState = rememberPullRefreshState(
+                    refreshing = state.loading,
+                    onRefresh = onRefresh
+                )
+
                 Box(
                     Modifier
                         .weight(1f)
+                        .pullRefresh(pullRefreshState)
                         .padding(horizontal = 16.dp, vertical = 10.dp),
                 ) {
+
+
                     if (state.allTransactions.isEmpty() && !state.loading) {
                         Text(
                             stringResource(R.string.recent_transactions_empty),
@@ -352,9 +364,16 @@ fun RecentTransactionsScreen(
                         totalPages = state.totalPages
                     )
 
-                    if (state.loading) {
-                        CircularProgressIndicator(Modifier.align(Alignment.Center))
-                    }
+                    PullRefreshIndicator(
+                        refreshing = state.loading,
+                        state = pullRefreshState,
+                        modifier = Modifier.align(Alignment.TopCenter),
+//                        backgroundColor = if (state.loading) Color.Red else Color.Green,
+                    )
+
+//                    if (state.loading) {
+//                        CircularProgressIndicator(Modifier.align(Alignment.Center))
+//                    }
                 }
             }
         }
