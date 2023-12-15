@@ -26,6 +26,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Divider
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -258,21 +259,18 @@ fun WalletScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(80.dp)
-                                .clickable {
-
-                                },
+                                .align(Alignment.CenterHorizontally),
                         ) {
 
                             Text(
                                 modifier = Modifier
                                     .padding(14.dp, 9.dp, 0.dp, 0.dp)
-                                    .align(Alignment.TopStart),
+                                    .align(Alignment.TopCenter),
                                 text = "Available Balance is",
                                 style = TextStyle(
                                     fontSize = 17.sp,
                                     lineHeight = 22.sp,
-                                    fontWeight = FontWeight(400),
-                                    color = Color(0xFFFF0043A5),
+                                    color = Color(0xFF013F9A),
 
                                     ),
                             )
@@ -280,7 +278,7 @@ fun WalletScreen(
                             Text(
                                 // funds view
                                 modifier = Modifier
-                                    .align(Alignment.BottomStart)
+                                    .align(Alignment.BottomCenter)
                                     .padding(
                                         14.dp, 10.dp, 0.dp, 10.dp,
                                     ),
@@ -294,19 +292,19 @@ fun WalletScreen(
 
                                     ),
                             )
-                            OutlinedButton(
-                                // load funds button
-                                modifier = Modifier
-                                    .padding(start = 8.dp, end = 14.dp)
-                                    .align(Alignment.CenterEnd),
-                                onClick = onAmountWithoutTip,
-                                border = BorderStroke(1.dp, color = Color((0xFFFF0043A5)))
-                            ) {
-                                Text(
-                                    "Load Funds",
-                                    color = Color((0xFFFF0043A5)),
-                                )
-                            }
+//                            OutlinedButton(
+//                                // load funds button
+//                                modifier = Modifier
+//                                    .padding(start = 8.dp, end = 14.dp)
+//                                    .align(Alignment.CenterEnd),
+//                                onClick = onAmountWithoutTip,
+//                                border = BorderStroke(1.dp, color = Color((0xFFFF0043A5)))
+//                            ) {
+//                                Text(
+//                                    "Load Funds",
+//                                    color = Color((0xFFFF0043A5)),
+//                                )
+//                            }
 
 
                         }
@@ -328,8 +326,10 @@ fun WalletScreen(
                                     .width(309.58.dp)
                                     .height(88.8.dp)
                                     .shadow(10.dp, RoundedCornerShape(size = 10.dp))
-                                    .background(color = Color(0xff0043A5),
-                                        shape = RoundedCornerShape(10.dp))
+                                    .background(
+                                        color = Color(0xff0043A5),
+                                        shape = RoundedCornerShape(10.dp)
+                                    )
                                     .clickable { isColumnVisible = !isColumnVisible },
                             ) {
 
@@ -365,73 +365,18 @@ fun WalletScreen(
                             val context = LocalContext.current
 
                             Row(
-                                // friends and family button
+                                // goods and service button
                                 modifier = Modifier
                                     .align(Alignment.CenterHorizontally)
                                     .padding(start = 16.dp, end = 16.dp, top = 25.dp)
                                     .border(
                                         width = 2.dp,
                                         color = Color.White,
-                                        shape = RoundedCornerShape(size = 10.dp),
-                                    )
-                                    .shadow(10.dp, RoundedCornerShape(size = 10.dp))
-                                    .width(290.dp)
-                                    .height(80.dp)
-                                    .background(
-                                        color = Color(0xff0043A5),
                                         shape = RoundedCornerShape(size = 10.dp)
                                     )
-                                    .padding(start = 10.dp, top = 6.dp, end = 10.dp, bottom = 6.dp)
-                                    .clickable {
-
-                                        Toast
-                                            .makeText(context, "Coming Soon...", Toast.LENGTH_SHORT)
-                                            .show()
-
-                                    },
-                            ) {
-                                Text(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .align(Alignment.CenterVertically),
-                                    text = "Pay Friends or Family",
-                                    style = TextStyle(
-                                        fontSize = 14.sp,
-                                        lineHeight = 22.sp,
-                                        fontWeight = FontWeight(600),
-                                        color = Color.White,
-                                        textAlign = TextAlign.Center,
-                                    ),
-                                )
-
-                            }
-
-                            Text(
-                                modifier = Modifier
-                                    .align(Alignment.CenterHorizontally)
-                                    .padding(start = 8.dp, end = 14.dp, top = 15.dp),
-                                text = "OR",
-                                style = TextStyle(
-                                    fontSize = 14.sp,
-                                    fontWeight = FontWeight(600),
-                                    color = Color(0xFF061F5C),
-
-                                    )
-                            )
-
-                            Row(
-                                // goods and service button
-                                modifier = Modifier
-                                    .align(Alignment.CenterHorizontally)
-                                    .padding(start = 16.dp, end = 16.dp, top = 15.dp)
-                                    .border(
-                                        width = 2.dp,
-                                        color = Color.White,
-                                        shape = RoundedCornerShape(size = 10.dp)
-                                    )
-                                    .shadow(10.dp, RoundedCornerShape(size = 10.dp))
+                                    .shadow(5.dp, RoundedCornerShape(size = 10.dp))
                                     .width(290.dp)
-                                    .height(80.dp)
+                                    .height(95.dp)
                                     .background(
                                         color = Color(0xff0043A5),
                                         shape = RoundedCornerShape(size = 10.dp)
@@ -457,6 +402,84 @@ fun WalletScreen(
                                     )
                                 )
 
+                            }
+
+
+
+                            Text(
+                                modifier = Modifier
+                                    .align(Alignment.CenterHorizontally)
+                                    .padding(start = 8.dp, end = 14.dp, top = 15.dp),
+                                text = "OR",
+                                style = TextStyle(
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight(600),
+                                    color = Color(0xFF061F5C),
+
+                                    )
+                            )
+
+                            Row(
+                                // friends and family button
+                                modifier = Modifier
+                                    .align(Alignment.CenterHorizontally)
+                                    .padding(start = 16.dp, end = 16.dp, top = 15.dp)
+                                    .border(
+                                        width = 2.dp,
+                                        color = Color(0xff0043A5),
+                                        shape = RoundedCornerShape(size = 10.dp),
+                                    )
+                                    .shadow(10.dp, RoundedCornerShape(size = 10.dp))
+                                    .width(290.dp)
+                                    .height(70.dp)
+                                    .background(
+                                        color = Color.White,
+                                        shape = RoundedCornerShape(size = 10.dp)
+                                    )
+                                    .padding(start = 10.dp, top = 6.dp, end = 10.dp, bottom = 6.dp)
+                                    .clickable {
+
+                                        Toast
+                                            .makeText(context, "Coming Soon...", Toast.LENGTH_SHORT)
+                                            .show()
+
+                                    },
+                            ) {
+                                Text(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .align(Alignment.CenterVertically),
+                                    text = "Pay Friends or Family",
+                                    style = TextStyle(
+                                        fontSize = 14.sp,
+                                        lineHeight = 22.sp,
+                                        fontWeight = FontWeight(600),
+                                        color = Color(0xff0043A5),
+                                        textAlign = TextAlign.Center,
+                                    ),
+                                )
+
+                            }
+
+                            Column (modifier = Modifier
+                                .width(115.dp)
+                                .align(Alignment.CenterHorizontally)) {
+
+                                Text(
+                                    modifier = Modifier
+                                        .align(Alignment.CenterHorizontally)
+                                        .padding(start = 5.dp, end = 5.dp, top = 25.dp)
+                                        .clickable { onAmountWithoutTip() },
+                                    text = "Load Funds",
+                                    style = TextStyle(
+                                        fontSize = 20.sp,
+                                        fontWeight = FontWeight(600),
+                                        color = Color(0xff0043A5),
+
+                                        )
+                                )
+
+                                Divider(color = Color(0xff0043A5), thickness = 1.dp)
                             }
                         }
                     }

@@ -136,87 +136,100 @@ fun AmountScreen(
                     .padding(10.dp),
             ) {
 
-                var text = ""
-                if (loadfunds) {
-                    text = "Load Amount"
-                } else {
-                    text = "Order Amount"
-                    if (!contactless) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 16.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
+                Box(modifier = Modifier.fillMaxSize()) {
 
-                            Column {
-                                Text(
-                                    stringResource(R.string.account_number).titleCase(),
-                                    modifier = Modifier,
-                                    fontSize = 18.sp,
-                                    color = Color(0xFF6DA9FF),
-                                    textAlign = TextAlign.Right,
-                                )
-                                Text(
-                                    state.accNo!!,
-                                    modifier = Modifier.padding(top = 5.dp),
-                                    fontSize = 18.sp,
-                                    color = Color.Black,
-                                    textAlign = TextAlign.Right,
-                                )
-                            }
+                    Column(modifier = Modifier.fillMaxSize().padding(bottom = 80.dp)) {
+
+
+                        var text = ""
+                        if (loadfunds) {
+                            text = "Load Amount"
+                        } else {
+                            text = "Order Amount"
+                            if (!contactless) {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(start = 16.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+
+                                    Column {
+                                        Text(
+                                            stringResource(R.string.account_number).titleCase(),
+                                            modifier = Modifier,
+                                            fontSize = 18.sp,
+                                            color = Color(0xFF6DA9FF),
+                                            textAlign = TextAlign.Right,
+                                        )
+                                        Text(
+                                            state.accNo!!,
+                                            modifier = Modifier.padding(top = 5.dp),
+                                            fontSize = 18.sp,
+                                            color = Color.Black,
+                                            textAlign = TextAlign.Right,
+                                        )
+                                    }
 
 
 //                Spacer(Modifier.height(16.dp))
+                                }
+                                Divider(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(
+                                            top = 3.dp,
+                                            bottom = 10.dp,
+                                            start = 18.dp,
+                                            end = 18.dp
+                                        )
+                                        .height(0.75.dp) // You can adjust the height of the line
+                                        .background(Color.Black),
+                                )
+                            }
+
                         }
-                        Divider(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 3.dp, bottom = 10.dp, start = 18.dp, end = 18.dp)
-                                .height(0.75.dp) // You can adjust the height of the line
-                                .background(Color.Black),
+
+
+                        Text(
+                            text = text.titleCase(),
+                            modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+                            color = Color(0xFF6DA9FF),
+                            fontSize = 18.sp
                         )
-                    }
-
-                }
-
-
-                Text(
-                    text = text.titleCase(),
-                    modifier = Modifier.padding(start = 16.dp, end = 16.dp),
-                    color = Color(0xFF6DA9FF),
-                    fontSize = 18.sp
-                )
 //            Spacer(Modifier.height(4.dp))
 //            Text(
 //                stringResource(R.string.please_confirm_entering_the_total_amount),
 //                style = MaterialTheme.typography.caption,
 //                color = Color.White
 //            )
-                Spacer(Modifier.height(8.dp))
-                AmountTextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 16.dp, end = 16.dp),
-                    value = state.amount,
-                    onValueChange = onAmountChange,
-                )
-                Spacer(Modifier.height(8.dp))
-                Spacer(Modifier.weight(1f))
-                PinPad(
-                    modifier = Modifier.fillMaxWidth(),
-                    onValueChange = {
-                        onAmountChange( if ((state.amount+it).toLong() > 200000) "" else state.amount + it)
-                    },
-                    onReset = {
-                        onAmountChange("")
-                    },
-                    onBackspace = { onAmountChange(state.amount.dropLast(1)) },
-                )
-                BottomNextButton(
-                    enabled = state.proceedAvailable,
-                    onClick = onProceed,
-                )
+                        Spacer(Modifier.height(8.dp))
+                        AmountTextField(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(start = 16.dp, end = 16.dp),
+                            value = state.amount,
+                            onValueChange = onAmountChange,
+                        )
+                        Spacer(Modifier.height(16.dp))
+                        PinPad(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            onValueChange = {
+                                onAmountChange(if ((state.amount + it).toLong() > 200000) "" else state.amount + it)
+                            },
+                            onReset = {
+                                onAmountChange("")
+                            },
+                            onBackspace = { onAmountChange(state.amount.dropLast(1)) },
+                        )
+                    }
+                    BottomNextButton(
+                        modifier = Modifier.align(Alignment.BottomCenter),
+                        enabled = state.proceedAvailable,
+                        onClick = onProceed,
+                    )
+                }
             }
         }
     }

@@ -212,8 +212,8 @@ fun RecentTransactionsScreen(
                         value = state.searchQuery,
                         onValueChange = onSearchChange,
                         label = "Search by name",
-                        modifier = Modifier.weight(1.6f)
-                            .padding(start = 16.dp).align(Alignment.Bottom),
+                        modifier = Modifier.weight(1.5f)
+                            .padding(start = 16.dp, end = 10.dp).align(Alignment.Bottom),
                         iconResId = R.drawable.search_icon,
                     )
 
@@ -265,12 +265,12 @@ fun RecentTransactionsScreen(
                         Row(
                             modifier = Modifier
                                 .height(40.dp)
-                                .padding(start = 10.dp)
                                 .border(
                                     1.dp,
                                     color = Color(0xFFFF0043A5),
                                     shape = RoundedCornerShape(5.dp)
                                 )
+                                .padding(start = 10.dp)
                         ) {
                             Spacer(modifier = Modifier.weight(1f))
                             Text(
@@ -293,7 +293,7 @@ fun RecentTransactionsScreen(
                             expanded = expanded,
                             onDismissRequest = { expanded = false },
                             modifier = Modifier
-                                .background(Color.White),
+                                .background(Color.White)
                         ) {
                             DropdownMenuItem(
                                 onClick = {
@@ -551,7 +551,8 @@ fun TransactionItem(
             ) {
                 Text(
                     text = transaction.customerName.capitalizeWords(),
-                    style = MaterialTheme.typography.subtitle1,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
                     color = Color(0xFFFF0043A5),
                     modifier = Modifier.align(Alignment.CenterVertically),
                 )

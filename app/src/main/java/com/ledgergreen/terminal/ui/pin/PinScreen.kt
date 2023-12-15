@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
@@ -132,7 +133,7 @@ fun PinScreen(
                 }
             }
 
-            Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.height(16.dp))
 
             PinPad(
                 modifier = Modifier.padding(16.dp),
@@ -148,6 +149,8 @@ fun PinScreen(
                     onPinChange(newValue, false)
                 },
             )
+
+            Spacer(modifier = Modifier.height(16.dp))
 
             Text(
                 modifier = Modifier.padding(bottom = 8.dp),

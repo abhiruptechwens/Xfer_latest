@@ -17,9 +17,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -53,6 +55,7 @@ import com.ledgergreen.terminal.ui.common.topbar.defaultAppBarConfig
 import com.ledgergreen.terminal.ui.home.dialogs.PaymentSuccessfulDialog
 import com.ledgergreen.terminal.ui.theme.LedgerGreenTheme
 import java.time.format.DateTimeFormatter
+import kotlinx.coroutines.delay
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
@@ -117,6 +120,22 @@ fun ReceiptScreen(
 
     BackHandler {
         Toast.makeText(context, "You cannot go back from this page", Toast.LENGTH_LONG).show()
+    }
+
+    var secondTimer by remember { mutableStateOf(5L) }
+
+    //LaunchedEffect to automatically click the button after 5 seconds
+    LaunchedEffect("Transfer") {
+        delay(5000) // 5000 milliseconds = 5 seconds
+        if (!state.isLoading) onNext()
+    }
+
+    // LaunchedEffect to update the second timer every second
+    LaunchedEffect("secondTimer") {
+        while (secondTimer > 0) {
+            delay(1000)
+            secondTimer--
+        }
     }
 
 
@@ -185,6 +204,7 @@ fun ReceiptScreen(
                                 .clickable { if (!state.isLoading) onNext() },
                         ) {
 
+//                            ${AppState1.totalAmount!!.toCurrencyString()}
                             Text(text = "Transfer ${AppState1.totalAmount!!.toCurrencyString()}",
                                 fontSize = 25.sp,
                                 textAlign = TextAlign.Center,
@@ -195,6 +215,13 @@ fun ReceiptScreen(
                         Image(painter = painterResource(id = R.drawable.button_design),
                             contentDescription = null)
                     }
+
+                    Text(
+                        modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 10.dp),
+                        text = "Transfer in $secondTimer seconds",
+                        style = MaterialTheme.typography.h5,
+                        color = if(secondTimer>3) Color(0xFFFF0043A5) else Color.Green
+                    )
 
 
 //                    BottomNextButton(

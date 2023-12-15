@@ -170,7 +170,7 @@ android {
 
 
         // prod versioncode
-        versionCode = 607
+        versionCode = 610
 
 
         // test versionName
@@ -178,7 +178,7 @@ android {
 
 
         // prod versionName
-        versionName = "Xfer-1.6.5.607"
+        versionName = "Xfer-1.6.5.610"
 
         testInstrumentationRunner = "android.support.test.runner.AndroidJUnitRunner"
 

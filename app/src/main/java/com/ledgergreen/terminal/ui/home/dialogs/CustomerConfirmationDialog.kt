@@ -3,6 +3,7 @@ package com.ledgergreen.terminal.ui.home.dialogs
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,6 +12,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
@@ -114,172 +117,173 @@ fun CustomerConfirmationDialog(
                             .background(Color.Gray),
                     )
 
-                    Column {
+                        Column(modifier = Modifier) {
 
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
 
-                            Image(
-                                painter = painterResource(id = R.drawable.person_icon_light),
-                                contentDescription = null,
-                                contentScale = ContentScale.Inside
-                            )
+                                Image(
+                                    painter = painterResource(id = R.drawable.person_icon_light),
+                                    contentDescription = null,
+                                    contentScale = ContentScale.Inside
+                                )
 
-                            Text(
-                                stringResource(R.string.customer_name).titleCase(),
-                                modifier = Modifier.padding(start = 5.dp),
-                                fontSize = 12.sp,
-                                textAlign = TextAlign.Right,
-                            )
+                                Text(
+                                    stringResource(R.string.customer_name).titleCase(),
+                                    modifier = Modifier.padding(start = 5.dp).width(110.dp),
+                                    fontSize = 12.sp,
+                                    textAlign = TextAlign.Left,
+                                )
 //                Spacer(Modifier.height(16.dp))
                             Text(
 
                                 name,
-                                modifier = Modifier.weight(1f),
+                                modifier = Modifier.weight(1f).horizontalScroll(rememberScrollState()),
                                 fontSize = 12.sp,
-                                textAlign = TextAlign.End,
+                                textAlign = TextAlign.Left,
                             )
-                        }
+                            }
 
-                        Spacer(Modifier.height(16.dp))
+                            Spacer(Modifier.height(16.dp))
 
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
 
-                            Image(
-                                painter = painterResource(id = R.drawable.document_icon),
-                                contentDescription = null,
-                                contentScale = ContentScale.Inside
-                            )
+                                Image(
+                                    painter = painterResource(id = R.drawable.document_icon),
+                                    contentDescription = null,
+                                    contentScale = ContentScale.Inside
+                                )
 
-                            Text(
-                                stringResource(R.string.document_id).titleCase(),
-                                modifier = Modifier.padding(start = 5.dp),
-                                fontSize = 12.sp,
-                                textAlign = TextAlign.Right,
-                            )
+                                Text(
+                                    stringResource(R.string.document_id).titleCase(),
+                                    modifier = Modifier.padding(start = 5.dp).width(110.dp),
+                                    fontSize = 12.sp,
+                                    textAlign = TextAlign.Left,
+                                )
 //                Spacer(Modifier.height(16.dp))
                             Text(
                                 document,
                                 modifier = Modifier.weight(1f),
                                 fontSize = 12.sp,
-                                textAlign = TextAlign.End
+                                textAlign = TextAlign.Left
                             )
-                        }
-                        Spacer(Modifier.height(16.dp))
+                            }
+                            Spacer(Modifier.height(16.dp))
 
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
 
-                            Image(
-                                painter = painterResource(id = R.drawable.state_icon),
-                                contentDescription = null,
-                                contentScale = ContentScale.Inside
-                            )
-                            Text(
-                                stringResource(R.string.state_name).titleCase(),
-                                modifier = Modifier.padding(start = 5.dp),
-                                fontSize = 12.sp,
-                                textAlign = TextAlign.Right,
-                            )
+                                Image(
+                                    painter = painterResource(id = R.drawable.state_icon),
+                                    contentDescription = null,
+                                    contentScale = ContentScale.Inside
+                                )
+                                Text(
+                                    stringResource(R.string.state_name).titleCase(),
+                                    modifier = Modifier.padding(start = 5.dp).width(110.dp),
+                                    fontSize = 12.sp,
+                                    textAlign = TextAlign.Left,
+                                )
 //                Spacer(Modifier.height(16.dp))
                             if (state != null) {
                                 Text(
                                     state,
                                     modifier = Modifier.weight(1f),
                                     fontSize = 12.sp,
-                                    textAlign = TextAlign.End
+                                    textAlign = TextAlign.Left
                                 )
                             } else
                                 Text(
                                     "",
                                     modifier = Modifier.weight(1f),
                                     fontSize = 14.sp,
-                                    textAlign = TextAlign.End
+                                    textAlign = TextAlign.Left
                                 )
-                        }
-                        Spacer(Modifier.height(16.dp))
+                            }
+                            Spacer(Modifier.height(16.dp))
 
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
 
-                            Image(
-                                painter = painterResource(id = R.drawable.phone_icon),
-                                contentDescription = null,
-                                contentScale = ContentScale.Inside
-                            )
-                            Text(
-                                stringResource(R.string.phone_no).titleCase(),
-                                modifier = Modifier.padding(start = 5.dp),
-                                fontSize = 12.sp,
-                                textAlign = TextAlign.Right,
-                            )
+                                Image(
+                                    painter = painterResource(id = R.drawable.phone_icon),
+                                    contentDescription = null,
+                                    contentScale = ContentScale.Inside
+                                )
+                                Text(
+                                    stringResource(R.string.phone_no).titleCase(),
+                                    modifier = Modifier.padding(start = 5.dp).width(110.dp),
+                                    fontSize = 12.sp,
+                                    textAlign = TextAlign.Left,
+                                )
 //                Spacer(Modifier.height(16.dp))
                             Text(
                                 phoneNo,
                                 modifier = Modifier.weight(1f),
                                 fontSize = 12.sp,
-                                textAlign = TextAlign.End
+                                textAlign = TextAlign.Left
                             )
-                        }
+                            }
 
-                        Button(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 20.dp)
-                                .height(70.dp),
-                            elevation = ButtonDefaults.elevation(10.dp),
-                            onClick = onConfirmCustomer,
-                            colors = ButtonDefaults.buttonColors(Color(0xFF003A8C)),
-                            shape = RoundedCornerShape(5.dp),
-                            content = { Text("Continue", color = Color.White, fontSize = 16.sp) },
-                        )
-                        Text(
-                            modifier = Modifier
-                                .align(Alignment.CenterHorizontally)
-                                .padding(top = 15.dp)
-                                .clickable { onScanAgain() },
-                            text = stringResource(R.string.scan_again),
-                            fontWeight = Bold,
-                            fontSize = 14.sp,
-                            color = Color(0xFF003A8C)
-                        )
-
-
-                        val openDialog = remember { mutableStateOf(false) }
-
-                        if (openDialog.value) {
-                            SupportDialog(
-                                onDismiss = {
-                                    openDialog.value = false
-                                },
+                            Button(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 20.dp)
+                                    .height(70.dp),
+                                elevation = ButtonDefaults.elevation(10.dp),
+                                onClick = onConfirmCustomer,
+                                colors = ButtonDefaults.buttonColors(Color(0xFF003A8C)),
+                                shape = RoundedCornerShape(5.dp),
+                                content = { Text("Continue", color = Color.White, fontSize = 16.sp) },
                             )
-                        }
+                            Text(
+                                modifier = Modifier
+                                    .align(Alignment.CenterHorizontally)
+                                    .padding(top = 15.dp)
+                                    .clickable { onScanAgain() },
+                                text = stringResource(R.string.scan_again),
+                                fontWeight = Bold,
+                                fontSize = 14.sp,
+                                color = Color(0xFF003A8C)
+                            )
 
-                        Text(
-                            modifier = Modifier
-                                .align(Alignment.CenterHorizontally)
-                                .padding(15.dp)
-                                .clickable { openDialog.value = true },
-                            text = "Not you? Contact support.",
-                            fontWeight = Bold,
-                            fontSize = 14.sp,
-                            color = Color.Black
-                        )
+
+                            val openDialog = remember { mutableStateOf(false) }
+
+                            if (openDialog.value) {
+                                SupportDialog(
+                                    onDismiss = {
+                                        openDialog.value = false
+                                    },
+                                )
+                            }
+
+                            Text(
+                                modifier = Modifier
+                                    .align(Alignment.CenterHorizontally)
+                                    .padding(15.dp)
+                                    .clickable { openDialog.value = true },
+                                text = "Not you? Contact support.",
+                                fontWeight = Bold,
+                                fontSize = 14.sp,
+                                color = Color.Black
+                            )
 //                        Divider(thickness = 1.dp, color = Color.Black)
-                    }
+                        }
+
                 }
             }
 
@@ -312,7 +316,7 @@ fun CustomerConfirmationDialogPreview() {
             document = "abcdefghi",
             state = "USA",
             phoneNo = "12345678901",
-            name = "Bruce Lee",
+            name = "MICHAEL JOSEPH LUCERO",
             onConfirmCustomer = { },
             onReject = { },
             onScanAgain = { },

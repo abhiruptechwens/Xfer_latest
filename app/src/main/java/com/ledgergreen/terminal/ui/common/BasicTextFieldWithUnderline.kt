@@ -37,7 +37,7 @@ fun TextFieldWithUnderlineAndTrailingIcon(
     onValueChange: (String) -> Unit,
     label: String,
     iconResId: Int,
-    fontSize:Int = 14,
+    fontSize:Int = 15,
     isError: Boolean = false,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,

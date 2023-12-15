@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -361,9 +362,10 @@ fun CardDetailsScreen(
                     ) {
 
                         if (savedCardToken!!.equals("0")) {
+
                             Column(
                                 modifier = Modifier
-                                    .padding(paddingValues),
+                                    .padding(paddingValues)
                             ) {
                                 Title(
                                     modifier = Modifier.padding(top = 8.dp),
@@ -371,60 +373,62 @@ fun CardDetailsScreen(
                                 )
 
 
-                                Row(
-                                    Modifier
-                                        .fillMaxWidth()
-                                        .padding(top = 8.dp),
-                                ) {
-                                    Column(modifier = Modifier.weight(2f)) {
-                                        CardNumberTextField(
-                                            cardNumber = state.cardNumber,
-                                            cardType = state.cardType,
-                                            maxCardNumberLength = state.cardConstraints.cardNumberLength,
-                                            onNumberChange = onCardNumberChange,
-                                            isError = state.showWrongCardNumber,
-                                        )
-                                        Text(
-                                            modifier = Modifier.alpha(state.showWrongCardNumber.toVisibility()),
-                                            text = stringResource(R.string.error_wrong_card_number),
-                                            style = MaterialTheme.typography.caption.copy(Color.Red),
-                                        )
-                                    }
-                                    Spacer(Modifier.width(8.dp))
-                                    ExpirationTextField(
-                                        modifier = Modifier.weight(1f),
-                                        expiration = state.expiryDate,
-                                        onValueChange = onExpiryChange,
+//                                Row(
+//                                    Modifier
+//                                        .fillMaxWidth()
+//                                        .padding(top = 8.dp),
+//                                ) {
+                                Column(modifier = Modifier.padding(top = 5.dp)) {
+                                    CardNumberTextField(
+                                        cardNumber = state.cardNumber,
+                                        cardType = state.cardType,
+                                        maxCardNumberLength = state.cardConstraints.cardNumberLength,
+                                        onNumberChange = onCardNumberChange,
+                                        isError = state.showWrongCardNumber,
                                     )
+//                                    Text(
+//                                        modifier = Modifier.alpha(state.showWrongCardNumber.toVisibility()),
+//                                        text = stringResource(R.string.error_wrong_card_number),
+//                                        style = MaterialTheme.typography.caption.copy(Color.Red),
+//                                    )
                                 }
-
-                                Row(modifier = Modifier.padding(top = 10.dp),
-                                    verticalAlignment = Alignment.CenterVertically,)
-                                {
-                                    CardHolderNameTextField(
-                                        modifier = Modifier
-                                            .padding(top = 6.dp)
-                                            .weight(1f),
-                                        name = state.cardHolderName,
-                                        onValueChange = onCardHolderChange,
-                                    )
-                                    Spacer(Modifier.width(16.dp))
-                                    CvvTextField(
-                                        modifier = Modifier
-                                            .padding(top = 6.dp)
-                                            .weight(1f),
-                                        cvv = state.cvv,
-                                        cvvMaxLength = state.cardConstraints.cvvLength,
-                                        onValueChange = onCvvChange,
-                                    )
-                                }
-
-                                var checked by remember{ mutableStateOf(false) }
-                                val backgroundColor = if(checked) Color(0xFFFF0043A5) else Color.White
-                                val cardColor = if(checked) Color.White else Color(0xFFFF0043A5)
-
-                                Row(
+//                                    Spacer(Modifier.width(8.dp))
+                                ExpirationTextField(
                                     modifier = Modifier.padding(top = 10.dp),
+                                    expiration = state.expiryDate,
+                                    onValueChange = onExpiryChange,
+                                )
+//                                }
+
+//                                Row(modifier = Modifier.padding(top = 10.dp),
+//                                    verticalAlignment = Alignment.CenterVertically,)
+//                                {
+                                CardHolderNameTextField(
+                                    modifier = Modifier
+                                        .padding(top = 10.dp),
+//                                            .weight(1f),
+                                    name = state.cardHolderName,
+                                    onValueChange = onCardHolderChange,
+                                )
+//                                    Spacer(Modifier.width(16.dp))
+                                CvvTextField(
+                                    modifier = Modifier
+                                        .padding(top = 10.dp),
+//                                            .weight(1f),
+                                    cvv = state.cvv,
+                                    cvvMaxLength = state.cardConstraints.cvvLength,
+                                    onValueChange = onCvvChange,
+                                )
+//                                }
+
+                                var checked by remember { mutableStateOf(false) }
+                                val backgroundColor =
+                                    if (checked) Color(0xFFFF0043A5) else Color.White
+                                val cardColor =
+                                    if (checked) Color.White else Color(0xFFFF0043A5)
+
+                                Row(
+                                    modifier = Modifier,
                                     verticalAlignment = Alignment.CenterVertically,
                                 ) {
                                     ZipCodeTextField(
@@ -438,15 +442,15 @@ fun CardDetailsScreen(
                                     Row(
                                         modifier = Modifier
                                             .weight(1f)
-                                            .padding(top = 22.dp, bottom = 13.dp)
+                                            .padding(top = 16.dp, bottom = 13.dp)
                                             .border(
                                                 width = 1.dp,
                                                 color = Color(0xFFFF0043A5),
-                                                shape = RoundedCornerShape(5.dp)
+                                                shape = RoundedCornerShape(5.dp),
                                             )
                                             .background(
                                                 backgroundColor,
-                                                shape = RoundedCornerShape(5.dp)
+                                                shape = RoundedCornerShape(5.dp),
                                             )
                                             .size(45.dp)
                                             .pointerInput(Unit) {
@@ -460,74 +464,82 @@ fun CardDetailsScreen(
                                             },
                                         horizontalArrangement = Arrangement.Center,
                                         verticalAlignment = Alignment.CenterVertically,
-                                    ){
-                                        Image(painter = painterResource( id = if (checked) R.drawable.tick_icon_white else R.drawable.card_icon),
+                                    ) {
+                                        Image(
+                                            painter = painterResource(id = if (checked) R.drawable.tick_icon_white else R.drawable.card_icon),
                                             contentDescription = null,
-                                            Modifier.size(20.dp))
+                                            Modifier.size(20.dp),
+                                        )
                                         Spacer(modifier = Modifier.width(10.dp))
-                                        Text(text = if (checked) "Card Saved" else "Save Card", fontSize = 16.sp, color = cardColor)
+                                        Text(
+                                            text = if (checked) "Card Saved" else "Save Card",
+                                            fontSize = 16.sp,
+                                            color = cardColor,
+                                        )
 
                                     }
                                 }
                             }
                         }
 
-                        if (state.amountDetails != null) {
-                            state.amountDetails?.let { amountDetails ->
-                                Box(modifier = Modifier) {
-                                    AmountDetailsView(
-                                        order = amountDetails.order,
-                                        tip = amountDetails.tips,
-                                        convenienceCharge = state.convenienceCharge,
-                                    )
+                            if (state.amountDetails != null) {
+                                state.amountDetails?.let { amountDetails ->
+                                    Column {
+                                        Box(modifier = Modifier) {
+                                            AmountDetailsView(
+                                                modifier = Modifier.fillMaxHeight(),
+                                                order = amountDetails.order,
+                                                tip = amountDetails.tips,
+                                                convenienceCharge = state.convenienceCharge,
+                                            )
 
-                                    CircularProgressIndicator(
-                                        Modifier
-                                            .align(Alignment.Center)
-                                            .padding(bottom = 4.dp)
-                                            .alpha(state.loading.toVisibility()),
-                                    )
+                                            CircularProgressIndicator(
+                                                Modifier
+                                                    .align(Alignment.Center)
+                                                    .padding(bottom = 4.dp)
+                                                    .alpha(state.loading.toVisibility()),
+                                            )
+                                        }
+                                    }
                                 }
                             }
-                        }
 
-                        val scope = rememberCoroutineScope()
-                        val keyboardController = LocalSoftwareKeyboardController.current
-                        Row(
-                            // continue
-                            modifier = Modifier
-                                .align(Alignment.CenterHorizontally)
-                                .padding(start = 16.dp, end = 16.dp, top = 10.dp)
-                                .fillMaxWidth()
-                                .height(70.dp)
-                                .background(
-                                    color = Color(0xFFFF0043A5),
-                                    shape = RoundedCornerShape(size = 10.dp),
-                                )
-                                .padding(start = 10.dp, top = 6.dp, end = 10.dp, bottom = 6.dp)
-                                .clickable {
-                                    scope.launch {
-                                        sheetShate.show()
-                                        keyboardController?.hide()
-                                    }
-                                },
-                        ) {
-
-                            Text(
+                            val scope = rememberCoroutineScope()
+                            val keyboardController = LocalSoftwareKeyboardController.current
+                            Row(
+                                // continue
                                 modifier = Modifier
+                                    .padding(start = 16.dp, end = 16.dp, top = 16.dp)
                                     .fillMaxWidth()
-                                    .align(Alignment.CenterVertically),
-                                text = "Continue",
-                                style = TextStyle(
-                                    fontSize = 18.sp,
-                                    lineHeight = 22.sp,
-                                    fontWeight = FontWeight(600),
-                                    color = Color.White,
-                                    textAlign = TextAlign.Center,
-                                ),
-                            )
+                                    .height(70.dp)
+                                    .background(
+                                        color = Color(0xFFFF0043A5),
+                                        shape = RoundedCornerShape(size = 10.dp),
+                                    )
+                                    .padding(start = 10.dp, top = 6.dp, end = 10.dp, bottom = 6.dp)
+                                    .clickable {
+                                        scope.launch {
+                                            sheetShate.show()
+                                            keyboardController?.hide()
+                                        }
+                                    },
+                            ) {
 
-                        }
+                                Text(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .align(Alignment.CenterVertically),
+                                    text = "Continue",
+                                    style = TextStyle(
+                                        fontSize = 18.sp,
+                                        lineHeight = 22.sp,
+                                        fontWeight = FontWeight(600),
+                                        color = Color.White,
+                                        textAlign = TextAlign.Center,
+                                    ),
+                                )
+
+                            }
                     }
                 }
             } else {
@@ -548,12 +560,12 @@ fun CardDetailsScreen(
                             )
 
 
-                            Row(
-                                Modifier
-                                    .fillMaxWidth()
-                                    .padding(top = 8.dp),
-                            ) {
-                                Column(modifier = Modifier.weight(2f)) {
+//                            Row(
+//                                Modifier
+//                                    .fillMaxWidth()
+//                                    .padding(top = 8.dp),
+//                            ) {
+                                Column(modifier = Modifier.padding(top = 5.dp)) {
                                     CardNumberTextField(
                                         cardNumber = state.cardNumber,
                                         cardType = state.cardType,
@@ -567,41 +579,41 @@ fun CardDetailsScreen(
 //                                        style = MaterialTheme.typography.caption.copy(Color.Red),
 //                                    )
                                 }
-                                Spacer(Modifier.width(8.dp))
+//                                Spacer(Modifier.width(8.dp))
                                 ExpirationTextField(
-                                    modifier = Modifier.weight(1f),
+                                    modifier = Modifier.padding(top = 10.dp),
                                     expiration = state.expiryDate,
                                     onValueChange = onExpiryChange,
                                 )
-                            }
+//                            }
 
-                            Row(modifier = Modifier.padding(top = 10.dp),
-                                verticalAlignment = Alignment.CenterVertically,)
-                            {
+//                            Row(modifier = Modifier.padding(top = 10.dp),
+//                                verticalAlignment = Alignment.CenterVertically,)
+//                            {
                                 CardHolderNameTextField(
                                     modifier = Modifier
-                                        .padding(top = 6.dp)
-                                        .weight(1f),
+                                        .padding(top = 10.dp),
+//                                        .weight(1f),
                                     name = state.cardHolderName,
                                     onValueChange = onCardHolderChange,
                                 )
-                                Spacer(Modifier.width(16.dp))
+//                                Spacer(Modifier.width(16.dp))
                                 CvvTextField(
                                     modifier = Modifier
-                                        .padding(top = 6.dp)
-                                        .weight(1f),
+                                        .padding(top = 10.dp),
+//                                        .weight(1f),
                                     cvv = state.cvv,
                                     cvvMaxLength = state.cardConstraints.cvvLength,
                                     onValueChange = onCvvChange,
                                 )
-                            }
+//                            }
 
                             var checked by remember{ mutableStateOf(false) }
                             val backgroundColor = if(checked) Color(0xFFFF0043A5) else Color.White
                             val cardColor = if(checked) Color.White else Color(0xFFFF0043A5)
 
                             Row(
-                                modifier = Modifier.padding(top = 10.dp),
+                                modifier = Modifier,
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 ZipCodeTextField(
@@ -616,7 +628,7 @@ fun CardDetailsScreen(
                                     modifier = Modifier
                                         .weight(1f)
 //                                        .height(45.dp)
-                                        .padding(top = 22.dp, bottom = 13.dp)
+                                        .padding(top = 16.dp, bottom = 13.dp)
                                         .background(
                                             backgroundColor,
                                             shape = RoundedCornerShape(5.dp)
@@ -672,7 +684,7 @@ fun CardDetailsScreen(
                     }
 
                     BottomNextButton(
-                        modifier = Modifier.padding(bottom = 16.dp, top = 16.dp),
+                        modifier = Modifier.padding(bottom = 16.dp, top = 10.dp),
                         onClick = { onProceed(savedCardToken) },
                         enabled = if (!state.loading) {
                             if (savedCardToken.equals("0"))
@@ -935,6 +947,7 @@ fun CardNumberTextField(
         onValueChange = { if (it.length <= maxCardNumberLength) onNumberChange(it)},
         label = stringResource(R.string.card_number),
         isError = isError,
+        fontSize = 16,
         iconResId = iconRes,
         modifier = modifier,
         keyboardOptions = KeyboardOptions(
